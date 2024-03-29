@@ -41,25 +41,27 @@ const Login = () => {
 
   return (
     <main>
-      <section>
-        <div>
-          <div>
-            <h1> Vocab Builder </h1>
-            <h3>Login</h3>
-            <form>
-              <div>
-                <label htmlFor="email-address">Email address</label>
+      <section className="flex justify-center text-center">
+        <div className="flex flex-col gap-4">
+          <h1> Vocab Builder </h1>
+          <h3>Login</h3>
+          <form>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <label htmlFor="email">Email address</label>
                 <input
                   type="email"
                   label="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  name="email"
                   required
                   placeholder="Email address"
+                  id="email"
                 />
               </div>
 
-              <div>
+              <div className="flex gap-4">
                 <label htmlFor="password">Password</label>
                 <input
                   type="password"
@@ -68,18 +70,20 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Password"
+                  name="password"
+                  id="password"
                 />
               </div>
 
-              <button type="submit" onClick={handleSubmit}>
+              <button className="border" type="submit" onClick={handleSubmit}>
                 Sign In
               </button>
-            </form>
+            </div>
+          </form>
 
-            <p>
-              Don&apos;t have an account? <Link to="/signup">Sign up</Link>
-            </p>
-          </div>
+          <p>
+            Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+          </p>
         </div>
       </section>
     </main>

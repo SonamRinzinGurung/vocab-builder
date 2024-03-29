@@ -37,14 +37,14 @@ const SignUp = () => {
   }
   return (
     <main>
-      <section>
-        <div>
-          <div>
-            <h1> Vocab Builder </h1>
-            <h3>Sign Up</h3>
-            <form>
-              <div>
-                <label htmlFor="email-address">Email address</label>
+      <section className="flex justify-center text-center">
+        <div className=" flex flex-col gap-4">
+          <h1> Vocab Builder </h1>
+          <h3>Sign Up</h3>
+          <form>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <label htmlFor="email">Email address</label>
                 <input
                   type="email"
                   label="Email address"
@@ -52,10 +52,12 @@ const SignUp = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="Email address"
+                  name="email"
+                  id="email"
                 />
               </div>
 
-              <div>
+              <div className="flex gap-4">
                 <label htmlFor="password">Password</label>
                 <input
                   type="password"
@@ -64,18 +66,20 @@ const SignUp = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Password"
+                  name="password"
+                  id="password"
                 />
               </div>
 
-              <button type="submit" onClick={onSubmit}>
+              <button className="border" type="submit" onClick={onSubmit}>
                 Sign up
               </button>
-            </form>
+            </div>
+          </form>
 
-            <p>
-              Already have an account? <Link to="/login">Sign in</Link>
-            </p>
-          </div>
+          <p>
+            Already have an account? <Link to="/login">Sign in</Link>
+          </p>
         </div>
       </section>
     </main>

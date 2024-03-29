@@ -14,19 +14,20 @@ const HomePage = () => {
       })
       .catch((error) => {
         console.log(error);
-        // An error happened.
       });
   };
   return (
     <div>
-      {" "}
-      <nav>
-        <p>Welcome Home</p>
-
-        <div>
-          <button onClick={handleLogout}>Logout</button>
+      <nav className="flex justify-end p-2">
+        <div className="">
+          <button className="border" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </nav>
+      <main>
+        <p>Welcome Home</p>
+      </main>
     </div>
   );
 };
