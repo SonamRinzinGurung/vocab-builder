@@ -6,6 +6,7 @@ import SignUp from "./routes/SignUp";
 import Login from "./routes/Login";
 import HomePage from "./routes/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import VocabMountain from "./routes/VocabMountain";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <HomePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/vocab-mountain",
+    element: (
+      <ProtectedRoute>
+        <VocabMountain />
       </ProtectedRoute>
     ),
   },

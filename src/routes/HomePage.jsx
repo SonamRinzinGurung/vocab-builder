@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import DefinitionGroup from "../components/DefinitionGroup";
+import WordMeaningGroup from "../components/WordMeaningGroup";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ const HomePage = () => {
   const [user, setUser] = useState(null);
   const [definition, setDefinition] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [wordAddStatus, setWordAddStatus] = useState(false);
 
   const handleLogout = () => {
     signOut(auth)
@@ -32,6 +33,7 @@ const HomePage = () => {
       );
       setNotFound(false);
       setDefinition(data[0]);
+      setWordAddStatus(false);
     } catch (error) {
       setDefinition(null);
       setNotFound(true);
@@ -52,6 +54,7 @@ const HomePage = () => {
         uid: user,
         timestamp: serverTimestamp(),
       });
+      setWordAddStatus(true);
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +72,10 @@ const HomePage = () => {
 
   return (
     <div>
-      <nav className="flex justify-end p-2">
+      <nav className="flex justify-between p-2">
+        <div>
+          <Link to={"/vocab-mountain"}>Vocab</Link>
+        </div>
         <div className="">
           <button className="border" onClick={handleLogout}>
             Logout
@@ -108,6 +114,7 @@ const HomePage = () => {
               </div>
             </div>
           </form>
+          {wordAddStatus && <li>Word Added Successfully!</li>}
           <section className="">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col">
@@ -122,7 +129,7 @@ const HomePage = () => {
                     <div key={index}>
                       <div>{meaning.partOfSpeech}</div>
 
-                      <DefinitionGroup meaning={meaning} />
+                      <WordMeaningGroup meaning={meaning} />
                     </div>
                   );
                 })}
