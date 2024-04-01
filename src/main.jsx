@@ -1,12 +1,12 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SignUp from "./routes/SignUp";
-import Login from "./routes/Login";
-import HomePage from "./routes/HomePage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import VocabMountain from "./routes/VocabMountain";
+const SignUp = lazy(() => import("./routes/SignUp"));
+const Login = lazy(() => import("./routes/Login"));
+const HomePage = lazy(() => import("./routes/HomePage"));
+const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
+const VocabMountain = lazy(() => import("./routes/VocabMountain"));
 
 const router = createBrowserRouter([
   {
@@ -37,6 +37,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
   </React.StrictMode>
 );
