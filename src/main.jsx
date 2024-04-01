@@ -7,31 +7,39 @@ const Login = lazy(() => import("./routes/Login"));
 const HomePage = lazy(() => import("./routes/HomePage"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const VocabMountain = lazy(() => import("./routes/VocabMountain"));
+const Root = lazy(() => import("./components/Root"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <ProtectedRoute>
-        <HomePage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/vocab-mountain",
-    element: (
-      <ProtectedRoute>
-        <VocabMountain />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/signup",
-    element: <SignUp />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
+    element: <Root />,
+    children: [
+      {
+        path: "/",
+        index: true,
+        element: (
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/vocab-mountain",
+        element: (
+          <ProtectedRoute>
+            <VocabMountain />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+    ],
   },
 ]);
 

@@ -1,30 +1,17 @@
 import { useState, useEffect } from "react";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import WordMeaningGroup from "../components/WordMeaningGroup";
 
 const HomePage = () => {
-  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [user, setUser] = useState(null);
   const [definition, setDefinition] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [wordAddStatus, setWordAddStatus] = useState(false);
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        localStorage.removeItem("user");
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -71,17 +58,7 @@ const HomePage = () => {
   }, [user]);
 
   return (
-    <div>
-      <nav className="flex justify-between p-2">
-        <div>
-          <Link to={"/vocab-mountain"}>Vocab</Link>
-        </div>
-        <div className="">
-          <button className="border" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      </nav>
+    <>
       <main className="ml-4">
         <div className="flex flex-col gap-4 items-center lg:items-start">
           <div>
@@ -90,7 +67,7 @@ const HomePage = () => {
           <form>
             <div className="flex flex-col gap-4 items-center lg:flex-row">
               <input
-                className="w-full"
+                className="w-full dark:bg-gray-800"
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -100,14 +77,14 @@ const HomePage = () => {
               <div className="flex gap-4">
                 <button
                   disabled={search ? false : true}
-                  className="border p-2"
+                  className="border px-2"
                   onClick={handleSearch}
                   type="submit"
                 >
                   Search
                 </button>
                 {definition && (
-                  <button className="border p-2" onClick={handleAddDefinition}>
+                  <button className="border px-2" onClick={handleAddDefinition}>
                     Add
                   </button>
                 )}
@@ -117,7 +94,7 @@ const HomePage = () => {
           {wordAddStatus && <li>Word Added Successfully!</li>}
           <section className="">
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-1">
                 <div>{definition?.word}</div>
                 <div className="text-sm">{definition?.phonetic}</div>
 
@@ -143,7 +120,7 @@ const HomePage = () => {
           </section>
         </div>
       </main>
-    </div>
+    </>
   );
 };
 

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const user = localStorage.getItem("user");
-
+  const { user, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,27 +14,15 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      let user = userCredentials.user;
-
-      const userObj = {
-        email: user.email,
-        displayName: user.displayName,
-      };
-      localStorage.setItem("user", JSON.stringify(userObj));
+      await signInWithEmailAndPassword(auth, email, password);
       navigate("/");
-      // console.log(user);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode, errorMessage);
     }
   };
-
+  if (isLoading) return null;
   if (user) {
     return <Navigate to={"/"} />;
   }
@@ -43,13 +31,13 @@ const Login = () => {
     <main>
       <section className="flex justify-center text-center">
         <div className="flex flex-col gap-4">
-          <h1> Vocab Builder </h1>
           <h3>Login</h3>
           <form>
             <div className="flex flex-col gap-4">
               <div className="flex gap-4">
                 <label htmlFor="email">Email address</label>
                 <input
+                  className="dark:bg-gray-800"
                   type="email"
                   label="Email address"
                   value={email}
@@ -64,6 +52,7 @@ const Login = () => {
               <div className="flex gap-4">
                 <label htmlFor="password">Password</label>
                 <input
+                  className="dark:bg-gray-800"
                   type="password"
                   label="Create password"
                   value={password}

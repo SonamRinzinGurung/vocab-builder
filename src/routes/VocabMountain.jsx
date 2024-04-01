@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
-import { Link } from "react-router-dom";
 import DefinitionGroup from "../components/DefinitionGroup";
 
 const VocabMountain = () => {
@@ -48,11 +47,6 @@ const VocabMountain = () => {
 
   return (
     <main>
-      <nav className="p-2">
-        <div>
-          <Link to={"/"}>Home</Link>
-        </div>
-      </nav>
       <div className="flex flex-col gap-4 ml-4">
         <div>
           <h1>Vocab Mountain</h1>

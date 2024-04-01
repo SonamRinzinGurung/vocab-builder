@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-config";
+import useAuth from "../hooks/useAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const user = localStorage.getItem("user");
+  const { user, isLoading } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,18 +14,7 @@ const SignUp = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      const userObj = {
-        email: user.email,
-        displayName: user.displayName,
-      };
-      localStorage.setItem("user", JSON.stringify(userObj));
-      // console.log(user);
+      await createUserWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (error) {
       const errCode = error.code;
@@ -32,6 +22,8 @@ const SignUp = () => {
       console.log(errCode, errMsg);
     }
   };
+
+  if (isLoading) return null;
   if (user) {
     return <Navigate to={"/"} />;
   }
@@ -39,13 +31,13 @@ const SignUp = () => {
     <main>
       <section className="flex justify-center text-center">
         <div className=" flex flex-col gap-4">
-          <h1> Vocab Builder </h1>
           <h3>Sign Up</h3>
           <form>
             <div className="flex flex-col gap-4">
               <div className="flex gap-4">
                 <label htmlFor="email">Email address</label>
                 <input
+                  className="dark:bg-gray-800"
                   type="email"
                   label="Email address"
                   value={email}
@@ -60,6 +52,7 @@ const SignUp = () => {
               <div className="flex gap-4">
                 <label htmlFor="password">Password</label>
                 <input
+                  className="dark:bg-gray-800"
                   type="password"
                   label="Create password"
                   value={password}

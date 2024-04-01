@@ -46,7 +46,7 @@ const DefinitionGroup = ({ vocab }) => {
           className="relative"
           onClick={() => setModal((prev) => !prev)}
         >
-          <div className="border p-2 rounded-md cursor-pointer">
+          <div className="border p-2 rounded-md cursor-pointer ml-1">
             <BsThreeDots />
           </div>
           {modal && <MenuModal vocabId={vocab.id} handleRemove={removeWord} />}
