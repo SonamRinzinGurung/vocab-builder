@@ -53,10 +53,10 @@ const VocabMountain = () => {
           <Link to={"/"}>Home</Link>
         </div>
       </nav>
-      <div>
-        <h1>Vocab Mountain</h1>
-      </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 ml-4">
+        <div>
+          <h1>Vocab Mountain</h1>
+        </div>
         {vocabList?.map((vocab, index) => {
           return (
             <section key={index} className="">
