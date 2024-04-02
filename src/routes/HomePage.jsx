@@ -24,6 +24,7 @@ const HomePage = () => {
     } catch (error) {
       setDefinition(null);
       setNotFound(true);
+      setWordAddStatus(false);
     }
   };
   const phonetic = definition?.phonetics.find((p) => p.audio);

@@ -33,7 +33,7 @@ const SignUp = () => {
         <div className=" flex flex-col gap-4">
           <h3>Sign Up</h3>
           <form>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 justify-between">
               <div className="flex gap-4">
                 <label htmlFor="email">Email address</label>
                 <input
@@ -49,7 +49,7 @@ const SignUp = () => {
                 />
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-4 justify-between">
                 <label htmlFor="password">Password</label>
                 <input
                   className="dark:bg-gray-800"

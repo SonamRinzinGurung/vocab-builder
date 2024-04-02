@@ -5,12 +5,15 @@ import MenuModal from "./MenuModal";
 import { BsThreeDots } from "react-icons/bs";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
+import useAudio from "../hooks/useAudio";
+import { CiPlay1, CiPause1 } from "react-icons/ci";
 
 const DefinitionGroup = ({ vocab }) => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
 
+  const { playing, playPause } = useAudio(vocab?.phonetics[0]?.audio);
   const removeWord = async (id) => {
     try {
       await deleteDoc(doc(db, "vocab", id));
@@ -34,7 +37,7 @@ const DefinitionGroup = ({ vocab }) => {
 
   return (
     <>
-      <div className="w-1/4 flex justify-between items-center">
+      <div className="w-1/2 md:w-1/6 flex justify-between items-center">
         <div
           className="font-bold cursor-pointer"
           onClick={() => setOpen(!open)}
@@ -52,14 +55,18 @@ const DefinitionGroup = ({ vocab }) => {
           {modal && <MenuModal vocabId={vocab.id} handleRemove={removeWord} />}
         </div>
       </div>
-      {open && <div className="text-sm">{vocab?.phonetic}</div>}
+      {open && (
+        <div className="flex gap-2 items-center">
+          <div className="text-sm">{vocab?.phonetic}</div>
+          {vocab?.phonetics[0]?.audio && (
+            <button onClick={playPause}>
+              {playing ? <CiPause1 /> : <CiPlay1 />}
+            </button>
+          )}
+        </div>
+      )}
       {open && (
         <>
-          <div>
-            {vocab?.phonetics[0]?.audio && (
-              <audio controls src={vocab.phonetics[0].audio} />
-            )}
-          </div>
           <>
             {vocab?.meanings.map((meaning, index) => {
               return (

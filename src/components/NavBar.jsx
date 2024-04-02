@@ -40,7 +40,7 @@ const NavBar = () => {
 
   return (
     <nav className="flex justify-between p-2 border dark:border-none">
-      <div className="flex gap-4">
+      <div className="flex gap-4 flex-col md:flex-row">
         {user && (
           <>
             <div>
@@ -55,14 +55,14 @@ const NavBar = () => {
       <div className="mx-auto">
         <Link to={"/"}>Vocab Builder</Link>
       </div>
-      <div className="flex gap-2">
-        <div className="border">
+      <div className="flex gap-4 flex-col md:flex-row">
+        <div className="">
           <button onClick={toggleDarkMode}>
             {darkMode ? "Light" : "Dark"}
           </button>
         </div>
         {user && (
-          <div className="border">
+          <div className="">
             <button className="" onClick={handleLogout}>
               Logout
             </button>

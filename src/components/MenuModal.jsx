@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 const MenuModal = ({ vocabId, handleRemove }) => {
   return (
     <div className="absolute z-50 w-28 lg:w-44 top-9">
-      <div className="border bg-white flex w-full flex-col dark:bg-gray-800">
+      <div className=" bg-white flex w-full flex-col dark:bg-gray-800">
         <button onClick={() => handleRemove(vocabId)}>Remove</button>
       </div>
     </div>
