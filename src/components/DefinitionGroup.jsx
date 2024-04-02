@@ -7,21 +7,24 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 const DefinitionGroup = ({ vocab }) => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
-
+  const queryClient = useQueryClient();
   const { playing, playPause } = useAudio(vocab?.phonetics[0]?.audio);
-  const removeWord = async (id) => {
-    try {
+
+  const { mutate: removeWord } = useMutation({
+    mutationFn: async (id) => {
       await deleteDoc(doc(db, "vocab", id));
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("vocab-mountain");
+    },
+  });
+
   useEffect(() => {
     function listenClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {

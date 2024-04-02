@@ -1,62 +1,65 @@
-import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../firebase-config";
+import { useState } from "react";
+import { db } from "../firebase-config";
 import axios from "axios";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import WordMeaningGroup from "../components/WordMeaningGroup";
+import { useMutation } from "@tanstack/react-query";
+import PropTypes from "prop-types";
 
-const HomePage = () => {
+const HomePage = ({ user }) => {
   const [search, setSearch] = useState("");
-  const [user, setUser] = useState(null);
   const [definition, setDefinition] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [wordAddStatus, setWordAddStatus] = useState(false);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios(
+  const { mutate: searchWord } = useMutation({
+    mutationFn: async (search) => {
+      return await axios(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${search}`
       );
+    },
+    onSuccess: ({ data }) => {
       setNotFound(false);
       setDefinition(data[0]);
       setWordAddStatus(false);
-    } catch (error) {
+    },
+    onError: () => {
       setDefinition(null);
       setNotFound(true);
       setWordAddStatus(false);
-    }
+    },
+  });
+
+  const { mutate: addDefinition } = useMutation({
+    mutationFn: async () => {
+      return await addDoc(collection(db, "vocab"), {
+        ...definition,
+        uid: user.uid,
+        timestamp: serverTimestamp(),
+      });
+    },
+    onSuccess: () => {
+      setWordAddStatus(true);
+    },
+    onError: (data) => {
+      console.log(console.log(data));
+    },
+  });
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    searchWord(search);
   };
   const phonetic = definition?.phonetics.find((p) => p.audio);
 
   const handleAddDefinition = async (e) => {
     e.preventDefault();
 
-    try {
-      if (definition == null) {
-        return;
-      }
-
-      await addDoc(collection(db, "vocab"), {
-        ...definition,
-        uid: user,
-        timestamp: serverTimestamp(),
-      });
-      setWordAddStatus(true);
-    } catch (error) {
-      console.log(error);
+    if (definition == null) {
+      return;
     }
+    addDefinition();
   };
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUser(uid);
-      } else {
-        setUser(null);
-      }
-    });
-  }, [user]);
 
   return (
     <>
@@ -123,6 +126,10 @@ const HomePage = () => {
       </main>
     </>
   );
+};
+
+HomePage.propTypes = {
+  user: PropTypes.object.isRequired,
 };
 
 export default HomePage;

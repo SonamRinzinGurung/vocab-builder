@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
+import { db } from "../firebase-config";
 import DefinitionGroup from "../components/DefinitionGroup";
+import { useQuery } from "@tanstack/react-query";
+import PropTypes from "prop-types";
 
-const VocabMountain = () => {
-  const [user, setUser] = useState(null);
-  const [vocabList, setVocabList] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-
-  const getVocab = async () => {
-    try {
+const VocabMountain = ({ user }) => {
+  const {
+    error,
+    data,
+    isPending,
+    isLoading: isQueryLoading,
+  } = useQuery({
+    queryKey: ["vocab-mountain"],
+    queryFn: async () => {
       const q = query(
         collection(db, "vocab"),
-        where("uid", "==", user),
+        where("uid", "==", user.uid),
         orderBy("timestamp", "desc")
       );
       const querySnapShot = await getDocs(q);
@@ -21,29 +23,13 @@ const VocabMountain = () => {
       querySnapShot.forEach((doc) => {
         fetchData.push({ id: doc.id, ...doc.data() });
       });
-      setVocabList(fetchData);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      return fetchData;
+    },
+  });
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUser(uid);
-      } else {
-        setUser(null);
-      }
-    });
-  }, [user]);
+  if (error) return "An error has occurred: " + error.message;
 
-  useEffect(() => {
-    getVocab();
-  }, [user]);
-
-  if (isLoading) return null;
+  if (isPending || isQueryLoading) return <div>Loading...</div>;
 
   return (
     <main>
@@ -51,7 +37,7 @@ const VocabMountain = () => {
         <div>
           <h1>Vocab Mountain</h1>
         </div>
-        {vocabList?.map((vocab, index) => {
+        {data?.map((vocab, index) => {
           return (
             <section key={index} className="">
               <DefinitionGroup vocab={vocab} />
@@ -63,4 +49,7 @@ const VocabMountain = () => {
   );
 };
 
+VocabMountain.propTypes = {
+  user: PropTypes.object.isRequired,
+};
 export default VocabMountain;
