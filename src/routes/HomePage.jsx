@@ -87,11 +87,11 @@ const HomePage = ({ user }) => {
                 >
                   Search
                 </button>
-                {definition && (
+                {definition && !wordAddStatus ? (
                   <button className="border px-2" onClick={handleAddDefinition}>
                     Add
                   </button>
-                )}
+                ) : null}
               </div>
             </div>
           </form>
