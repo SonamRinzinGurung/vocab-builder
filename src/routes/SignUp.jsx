@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import { createUserWithEmailAndPassword,sendEmailVerification } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
 import useSetTitle from "../hooks/useSetTitle";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
-  useSetTitle("SignUp")
+  useSetTitle("SignUp");
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
 
@@ -16,13 +20,16 @@ const SignUp = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await sendEmailVerification(userCredential.user)
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await sendEmailVerification(userCredential.user);
       navigate("/");
     } catch (error) {
-      const errCode = error.code;
       const errMsg = error.message;
-      console.log(errCode, errMsg);
+      toast.error(errMsg);
     }
   };
 

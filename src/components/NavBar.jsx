@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
+import { ToastContainer, Slide } from "react-toastify";
+
 const NavBar = () => {
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
@@ -68,6 +70,19 @@ const NavBar = () => {
           </div>
         )}
       </div>
+      <ToastContainer
+        theme={darkMode ? "dark" : "light"}
+        position="bottom-right"
+        autoClose={3500}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        transition={Slide}
+      />
     </nav>
   );
 };

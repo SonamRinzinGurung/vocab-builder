@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.min.css";
 const SignUp = lazy(() => import("./routes/SignUp"));
 const Login = lazy(() => import("./routes/Login"));
 const HomePage = lazy(() => import("./routes/HomePage"));

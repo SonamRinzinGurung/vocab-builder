@@ -10,11 +10,12 @@ import {
   getDocs,
 } from "firebase/firestore";
 import WordMeaningGroup from "../components/WordMeaningGroup";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
 import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
+import { toast } from "react-toastify";
 
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -23,6 +24,7 @@ const HomePage = ({ user }) => {
   const [notFound, setNotFound] = useState(false);
   const [wordAddStatus, setWordAddStatus] = useState(false);
   const [result, setResult] = useState(null);
+  const queryClient = useQueryClient();
 
   const { playing, playPause } = useAudio(definition?.phonetics);
   useQuery({
@@ -68,8 +70,11 @@ const HomePage = ({ user }) => {
     },
     onSuccess: () => {
       setWordAddStatus(true);
+      toast.success("Word and its definition successfully added.");
+      queryClient.invalidateQueries("vocab-all");
     },
     onError: (data) => {
+      toast.error("Error occurred!");
       console.log(console.log(data));
     },
   });
@@ -83,6 +88,7 @@ const HomePage = ({ user }) => {
     e.preventDefault();
 
     if (definition == null) {
+      toast.error("There is no word to add.");
       return;
     }
 
@@ -91,7 +97,7 @@ const HomePage = ({ user }) => {
     );
 
     if (duplicate) {
-      console.log("Word already exists");
+      toast.error("Word already exists in the vocab mountain.");
       return;
     }
 
@@ -131,7 +137,6 @@ const HomePage = ({ user }) => {
             </div>
           </div>
         </form>
-        {wordAddStatus && <li>Word Added Successfully!</li>}
         <section className="">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">

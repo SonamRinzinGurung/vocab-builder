@@ -3,13 +3,19 @@ import { sendEmailVerification, signOut } from "firebase/auth";
 import useAuth from "../hooks/useAuth";
 import { auth } from "../firebase-config";
 import useSetTitle from "../hooks/useSetTitle";
+import { toast } from "react-toastify";
 
 const VerifyNotice = () => {
-  useSetTitle("Verify Email")
+  useSetTitle("Verify Email");
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const handleResendEmail = async () => {
-    await sendEmailVerification(user);
+    try {
+      await sendEmailVerification(user);
+      toast.success("Verification link sent to user's email");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleLogout = () => {

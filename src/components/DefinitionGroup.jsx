@@ -8,6 +8,7 @@ import { db } from "../firebase-config";
 import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const DefinitionGroup = ({ vocab }) => {
   const [open, setOpen] = useState(false);
@@ -22,6 +23,10 @@ const DefinitionGroup = ({ vocab }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("vocab-mountain");
+      toast.success("Word removed from vocab mountain.");
+    },
+    onError: () => {
+      toast.error("Error occurred!");
     },
   });
 

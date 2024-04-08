@@ -3,10 +3,11 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import useSetTitle from "../hooks/useSetTitle"
+import useSetTitle from "../hooks/useSetTitle";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  useSetTitle("Login")
+  useSetTitle("Login");
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const [email, setEmail] = useState("");
@@ -19,9 +20,8 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (error) {
-      const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
+      toast.error(errorMessage);
     }
   };
   if (isLoading) return null;

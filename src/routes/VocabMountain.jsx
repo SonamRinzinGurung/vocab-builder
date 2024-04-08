@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
 
 const VocabMountain = ({ user }) => {
-  useSetTitle("Vocab Mountain")
+  useSetTitle("Vocab Mountain");
   const [search, setSearch] = useState("");
   const [result, setResult] = useState(null);
   const [isSorted, setIsSorted] = useState(false);
