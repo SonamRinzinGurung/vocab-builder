@@ -1,18 +1,44 @@
 import { useState } from "react";
 import { db } from "../firebase-config";
 import axios from "axios";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import WordMeaningGroup from "../components/WordMeaningGroup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
+import useAudio from "../hooks/useAudio";
+import { CiPlay1, CiPause1 } from "react-icons/ci";
 
 const HomePage = ({ user }) => {
-  useSetTitle("Vocab Builder")
+  useSetTitle("Vocab Builder");
   const [search, setSearch] = useState("");
   const [definition, setDefinition] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [wordAddStatus, setWordAddStatus] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const { playing, playPause } = useAudio(definition?.phonetics);
+  useQuery({
+    queryKey: ["vocab-all"],
+    queryFn: async () => {
+      const q = query(collection(db, "vocab"), where("uid", "==", user.uid));
+
+      const querySnapShot = await getDocs(q);
+      const fetchData = [];
+      querySnapShot.forEach((doc) => {
+        fetchData.push({ id: doc.id, ...doc.data() });
+      });
+      setResult(fetchData);
+      return fetchData;
+    },
+  });
 
   const { mutate: searchWord } = useMutation({
     mutationFn: async (search) => {
@@ -52,7 +78,6 @@ const HomePage = ({ user }) => {
     e.preventDefault();
     searchWord(search);
   };
-  const phonetic = definition?.phonetics.find((p) => p.audio);
 
   const handleAddDefinition = async (e) => {
     e.preventDefault();
@@ -60,6 +85,16 @@ const HomePage = ({ user }) => {
     if (definition == null) {
       return;
     }
+
+    const duplicate = result?.find(
+      (definition) => definition?.word.toLowerCase() === search.toLowerCase()
+    );
+
+    if (duplicate) {
+      console.log("Word already exists");
+      return;
+    }
+
     addDefinition();
   };
 
@@ -103,7 +138,11 @@ const HomePage = ({ user }) => {
               <div>{definition?.word}</div>
               <div className="text-sm">{definition?.phonetic}</div>
 
-              {phonetic && <audio controls src={phonetic.audio} />}
+              {definition?.phonetics && (
+                <button onClick={playPause}>
+                  {playing ? <CiPause1 /> : <CiPlay1 />}
+                </button>
+              )}
             </div>
 
             {definition?.meanings.map((meaning, index) => {

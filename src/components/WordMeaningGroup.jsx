@@ -8,10 +8,11 @@ const WordMeaningGroup = ({ meaning }) => {
   return (
     <article className="flex flex-col gap-2">
       <div className="flex gap-2">
-        <div className="cursor-pointer" onClick={() => setOpen(!open)}>
-          {open ? "v" : ">"}
-        </div>
-
+        {meaning.definitions[1] && (
+          <div className="cursor-pointer" onClick={() => setOpen(!open)}>
+            {open ? "v" : ">"}
+          </div>
+        )}
         <div className="flex flex-col">
           <div className="cursor-pointer" onClick={() => setOpen(!open)}>
             1. {meaning.definitions[0].definition}

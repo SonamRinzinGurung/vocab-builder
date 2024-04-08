@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
-const useAudio = (url) => {
-  const [audio] = useState(new Audio(url));
+const useAudio = (urls) => {
+  const url = urls?.find((p) => p.audio);
+  const [audio] = useState(new Audio(url?.audio));
   const [playing, setPlaying] = useState(false);
 
   const playPause = () => {
@@ -25,6 +26,10 @@ const useAudio = (url) => {
       audio.removeEventListener("ended", () => setPlaying(false));
     };
   }, [audio]);
+
+  useEffect(() => {
+    audio.src = url?.audio;
+  }, [url]);
 
   return { playing, playPause };
 };
