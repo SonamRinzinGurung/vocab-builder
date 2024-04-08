@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword,sendEmailVerification } from "firebase/auth";
 import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
+import useSetTitle from "../hooks/useSetTitle";
 
 const SignUp = () => {
+  useSetTitle("SignUp")
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
 
@@ -14,7 +16,8 @@ const SignUp = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user)
       navigate("/");
     } catch (error) {
       const errCode = error.code;

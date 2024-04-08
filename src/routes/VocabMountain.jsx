@@ -4,11 +4,13 @@ import { db } from "../firebase-config";
 import DefinitionGroup from "../components/DefinitionGroup";
 import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
+import useSetTitle from "../hooks/useSetTitle";
 
 const VocabMountain = ({ user }) => {
+  useSetTitle("Vocab Mountain")
   const [search, setSearch] = useState("");
   const [result, setResult] = useState(null);
-  const [isSorted, setIsSort] = useState(false);
+  const [isSorted, setIsSorted] = useState(false);
   const [dateSort, setDateSort] = useState("desc");
 
   let {
@@ -55,13 +57,13 @@ const VocabMountain = ({ user }) => {
     if (isSorted) {
       setResult(data);
       setSearch("");
-      setIsSort(false);
+      setIsSorted(false);
     } else {
       const sortedResult = [...result]?.sort((a, b) =>
         a.word > b.word ? 1 : b.word > a.word ? -1 : 0
       );
       setResult(sortedResult);
-      setIsSort(true);
+      setIsSorted(true);
     }
   };
 

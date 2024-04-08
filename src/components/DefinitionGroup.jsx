@@ -70,17 +70,15 @@ const DefinitionGroup = ({ vocab }) => {
       )}
       {open && (
         <>
-          <>
-            {vocab?.meanings.map((meaning, index) => {
-              return (
-                <div key={index}>
-                  <div>{meaning.partOfSpeech}</div>
+          {vocab?.meanings.map((meaning, index) => {
+            return (
+              <div key={index}>
+                <div>{meaning.partOfSpeech}</div>
 
-                  <WordMeaningGroup meaning={meaning} />
-                </div>
-              );
-            })}
-          </>
+                <WordMeaningGroup meaning={meaning} />
+              </div>
+            );
+          })}
         </>
       )}
     </>

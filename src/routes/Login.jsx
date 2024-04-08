@@ -3,8 +3,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import useSetTitle from "../hooks/useSetTitle"
 
 const Login = () => {
+  useSetTitle("Login")
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const [email, setEmail] = useState("");

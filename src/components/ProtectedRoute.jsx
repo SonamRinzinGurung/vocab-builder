@@ -14,6 +14,10 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to={"/login"} />;
   }
 
+  if (!user?.emailVerified) {
+    return <Navigate to={"/verify-email"} />;
+  }
+
   let childrenWithProps;
   // Checking isValidElement is the safe way and avoids a typescript error too.
   if (React.isValidElement(children)) {

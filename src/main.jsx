@@ -9,6 +9,7 @@ const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const VocabMountain = lazy(() => import("./routes/VocabMountain"));
 const Root = lazy(() => import("./components/Root"));
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import VerifyNotice from "./routes/VerifyNotice";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             <VocabMountain />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/verify-email",
+        element: <VerifyNotice />,
       },
       {
         path: "/signup",

@@ -14,7 +14,6 @@ const NavBar = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
-        localStorage.removeItem("user");
         navigate("/login");
       })
       .catch((error) => {
