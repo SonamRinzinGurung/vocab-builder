@@ -5,6 +5,7 @@ import DefinitionGroup from "../components/DefinitionGroup";
 import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
+import Fuse from "fuse.js";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -12,8 +13,10 @@ const VocabMountain = ({ user }) => {
   const [result, setResult] = useState(null);
   const [isSorted, setIsSorted] = useState(false);
   const [dateSort, setDateSort] = useState("desc");
+  const [suggestedWords, setSuggestedWords] = useState(null);
+  const [notFound, setNotFound] = useState(false);
 
-  let {
+  const {
     error,
     data,
     isPending,
@@ -34,6 +37,8 @@ const VocabMountain = ({ user }) => {
         fetchData.push({ id: doc.id, ...doc.data() });
       });
       setResult(fetchData);
+      setSuggestedWords(null);
+      setNotFound(false);
       return fetchData;
     },
   });
@@ -49,6 +54,18 @@ const VocabMountain = ({ user }) => {
       }
     });
     setResult(searchResult);
+
+    if (searchResult.length === 0) {
+      const options = {
+        keys: ["word"],
+        threshold: 0.3,
+      };
+      const fuse = new Fuse(data, options);
+      const result = fuse.search(search);
+      const suggestedWords = result?.map((i) => i?.item?.word);
+      setSuggestedWords(suggestedWords);
+      setNotFound(true);
+    }
   };
 
   const handleSort = (e) => {
@@ -81,13 +98,27 @@ const VocabMountain = ({ user }) => {
     }
   };
 
+  const handleSearchSuggestedWord = (suggestedWord) => {
+    let searchResult = [];
+
+    data?.find((definition) => {
+      const word = definition.word;
+      if (word.toLocaleLowerCase() === suggestedWord.toLocaleLowerCase()) {
+        searchResult.push(definition);
+      }
+    });
+    setResult(searchResult);
+    setNotFound(false);
+    setSuggestedWords(null);
+  };
+
   if (error) return "An error has occurred: " + error.message;
 
   if (isPending || isQueryLoading) return <div>Loading...</div>;
 
   return (
     <main>
-      <div className="flex flex-col gap-4 ml-4">
+      <div className="flex flex-col gap-4 mx-4 my-10">
         <div>
           <h1>Vocab Mountain</h1>
           <form>
@@ -110,6 +141,31 @@ const VocabMountain = ({ user }) => {
             </div>
           </form>
         </div>
+
+        {notFound && (
+          <div>
+            <p>This word is not in your vocab mountain.</p>
+          </div>
+        )}
+        {notFound && suggestedWords.length > 0 && (
+          <div className="">
+            <p>Did you mean? </p>
+            <div className="flex gap-2 flex-wrap">
+              {suggestedWords.map((word, index) => {
+                return (
+                  <div
+                    className="cursor-pointer"
+                    key={index}
+                    onClick={() => handleSearchSuggestedWord(word)}
+                  >
+                    {word}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {result?.map((vocab, index) => {
           return (
             <section key={index} className="">

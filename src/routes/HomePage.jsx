@@ -94,6 +94,7 @@ const HomePage = ({ user }) => {
     searchWord(word);
     setSearch(word);
   };
+
   const handleAddDefinition = async (e) => {
     e.preventDefault();
 
@@ -115,8 +116,8 @@ const HomePage = ({ user }) => {
   };
 
   return (
-    <main className="ml-4">
-      <div className="flex flex-col gap-4 items-center lg:items-start">
+    <main className="mx-4 my-10">
+      <div className="flex flex-col gap-4 lg:items-start">
         <div>
           <p>Search for the new word you learned</p>
         </div>
@@ -169,8 +170,15 @@ const HomePage = ({ user }) => {
                 </div>
               );
             })}
-            {notFound && suggestedWords && (
-              <div className="text-center">
+
+            {notFound && (
+              <div>
+                <p>No definition for the word found.</p>
+              </div>
+            )}
+
+            {notFound && suggestedWords.length > 0 && (
+              <div className="">
                 <p>Did you mean? </p>
                 <div className="flex gap-2 flex-wrap">
                   {suggestedWords.map((word, index) => {
@@ -185,11 +193,6 @@ const HomePage = ({ user }) => {
                     );
                   })}
                 </div>
-              </div>
-            )}
-            {notFound && (
-              <div>
-                <p>No definition for the word found.</p>
               </div>
             )}
           </div>
