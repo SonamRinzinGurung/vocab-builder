@@ -16,17 +16,21 @@ import useSetTitle from "../hooks/useSetTitle";
 import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { toast } from "react-toastify";
+import getWordSuggestion from "../utils/getWordSuggestion";
 
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
+
   const [search, setSearch] = useState("");
   const [definition, setDefinition] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [wordAddStatus, setWordAddStatus] = useState(false);
   const [result, setResult] = useState(null);
+  const [suggestedWords, setSuggestedWords] = useState(null);
   const queryClient = useQueryClient();
 
   const { playing, playPause } = useAudio(definition?.phonetics);
+
   useQuery({
     queryKey: ["vocab-all"],
     queryFn: async () => {
@@ -52,8 +56,10 @@ const HomePage = ({ user }) => {
       setNotFound(false);
       setDefinition(data[0]);
       setWordAddStatus(false);
+      setSuggestedWords(null);
     },
     onError: () => {
+      getWordSuggestion(search, setSuggestedWords);
       setDefinition(null);
       setNotFound(true);
       setWordAddStatus(false);
@@ -84,6 +90,10 @@ const HomePage = ({ user }) => {
     searchWord(search);
   };
 
+  const searchSuggestedWord = (word) => {
+    searchWord(word);
+    setSearch(word);
+  };
   const handleAddDefinition = async (e) => {
     e.preventDefault();
 
@@ -92,11 +102,11 @@ const HomePage = ({ user }) => {
       return;
     }
 
-    const duplicate = result?.find(
+    const isDuplicate = result?.find(
       (definition) => definition?.word.toLowerCase() === search.toLowerCase()
     );
 
-    if (duplicate) {
+    if (isDuplicate) {
       toast.error("Word already exists in the vocab mountain.");
       return;
     }
@@ -159,10 +169,27 @@ const HomePage = ({ user }) => {
                 </div>
               );
             })}
-
+            {notFound && suggestedWords && (
+              <div className="text-center">
+                <p>Did you mean? </p>
+                <div className="flex gap-2 flex-wrap">
+                  {suggestedWords.map((word, index) => {
+                    return (
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => searchSuggestedWord(word)}
+                        key={index}
+                      >
+                        {word}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             {notFound && (
               <div>
-                <p>No definition of the word found.</p>
+                <p>No definition for the word found.</p>
               </div>
             )}
           </div>

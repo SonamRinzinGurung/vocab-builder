@@ -7,7 +7,9 @@ import { ToastContainer, Slide } from "react-toastify";
 
 const NavBar = () => {
   const navigate = useNavigate();
+
   const { user, isLoading } = useAuth();
+  
   let darkModeLocal = localStorage.getItem("darkMode");
   darkModeLocal = darkModeLocal?.toLowerCase() === "true";
 
@@ -42,7 +44,7 @@ const NavBar = () => {
   return (
     <nav className="flex justify-between p-2 border dark:border-none">
       <div className="flex gap-4 flex-col md:flex-row">
-        {user && (
+        {user && user.emailVerified && (
           <>
             <div>
               <Link to={"/"}>Home</Link>
@@ -62,7 +64,7 @@ const NavBar = () => {
             {darkMode ? "Light" : "Dark"}
           </button>
         </div>
-        {user && (
+        {user && user.emailVerified && (
           <div className="">
             <button className="" onClick={handleLogout}>
               Logout
