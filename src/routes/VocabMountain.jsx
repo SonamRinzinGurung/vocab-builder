@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { db } from "../firebase-config";
 import DefinitionGroup from "../components/DefinitionGroup";
@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
 import Fuse from "fuse.js";
+import useKeyPress from "../hooks/useKeyPress";
+import useWindowSize from "../hooks/useWindowSize";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -15,6 +17,14 @@ const VocabMountain = ({ user }) => {
   const [dateSort, setDateSort] = useState("desc");
   const [suggestedWords, setSuggestedWords] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const searchBoxRef = useRef(null);
+  const { isMobile } = useWindowSize();
+  useKeyPress("/", (event) => {
+    if (document.activeElement !== searchBoxRef.current) {
+      event.preventDefault();
+      searchBoxRef.current.focus();
+    }
+  });
 
   const {
     error,
@@ -124,10 +134,11 @@ const VocabMountain = ({ user }) => {
           <form>
             <div className="flex gap-2">
               <input
+                ref={searchBoxRef}
                 className="dark:bg-gray-800"
                 type="text"
                 name="search"
-                placeholder="search"
+                placeholder={isMobile ? "Search" : "Search    press /"}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

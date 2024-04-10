@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { db } from "../firebase-config";
 import axios from "axios";
 import {
@@ -17,6 +17,8 @@ import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { toast } from "react-toastify";
 import getWordSuggestion from "../utils/getWordSuggestion";
+import useKeyPress from "../hooks/useKeyPress";
+import useWindowSize from "../hooks/useWindowSize";
 
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -28,8 +30,17 @@ const HomePage = ({ user }) => {
   const [result, setResult] = useState(null);
   const [suggestedWords, setSuggestedWords] = useState(null);
   const queryClient = useQueryClient();
+  const searchBoxRef = useRef(null);
+
+  useKeyPress("/", (event) => {
+    if (document.activeElement !== searchBoxRef.current) {
+      event.preventDefault();
+      searchBoxRef.current.focus();
+    }
+  });
 
   const { playing, playPause } = useAudio(definition?.phonetics);
+  const { isMobile } = useWindowSize();
 
   useQuery({
     queryKey: ["vocab-all"],
@@ -117,19 +128,20 @@ const HomePage = ({ user }) => {
 
   return (
     <main className="mx-4 my-10">
-      <div className="flex flex-col gap-4 lg:items-start">
+      <div className="flex flex-col gap-4 ">
         <div>
           <p>Search for the new word you learned</p>
         </div>
         <form>
           <div className="flex flex-col gap-4 items-center lg:flex-row">
             <input
-              className="w-full dark:bg-gray-800"
+              ref={searchBoxRef}
+              className="lg:w-1/2 w-full dark:bg-gray-800"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               name="search"
-              placeholder="search word"
+              placeholder={isMobile ? "Search" : "Search    press /"}
             />
             <div className="flex gap-4">
               <button
