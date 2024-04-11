@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 body {
-  font-family: "Open Sans", Sans-Serif;
+  font-family: "Inter", Sans-Serif;
   background: #f0f4f8;
   font-weight: 400;
   line-height: 1.75;
