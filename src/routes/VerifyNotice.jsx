@@ -42,16 +42,17 @@ const VerifyNotice = () => {
   }
 
   return (
-    <main className="flex flex-col items-center mt-24 p-4 dark:text-white gap-2 text-center">
+    <main className="flex flex-col items-center mt-24 p-4 dark:text-gray-100 gap-2 text-center">
       <h1 className="font-heading font-bold text-2xl">Verify Your Email</h1>
       <p className="font-subHead text-lg">
         Please check your email for verification link to activate your account.
       </p>
       <div className="flex flex-col my-4 gap-2">
         <p>Didn&apos;t receive an email?</p>
+
         <button
           className={
-            "mx-auto border text-lime-600 dark:text-lime-300 dark:hover:text-lime-400"
+            "w-full text-lg font-medium py-1 text-primary border border-primary"
           }
           onClick={handleResendEmail}
         >
@@ -64,7 +65,7 @@ const VerifyNotice = () => {
       <div className="mt-8">
         <p className="">
           Go back to{" "}
-          <button className="font-medium text-blue-500" onClick={handleLogout}>
+          <button className="font-medium text-primary" onClick={handleLogout}>
             Login
           </button>
         </p>

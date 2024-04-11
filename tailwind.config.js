@@ -9,6 +9,7 @@ export default {
         subHead: ["Fira Sans", "san-serif"],
         heading: ["Chakra Petch", "san-serif"],
         mono: ["DM Mono", "san-serif"],
+        logo: ["Abril Fatface", "san-serif"],
       },
       colors: {
         primary: "#6187D1",
