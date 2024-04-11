@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { db } from "../firebase-config";
 import axios from "axios";
 import {
@@ -19,7 +19,6 @@ import { toast } from "react-toastify";
 import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
 import useWindowSize from "../hooks/useWindowSize";
-import useSpeechToText from "../hooks/useSpeechToText";
 
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -32,20 +31,6 @@ const HomePage = ({ user }) => {
   const [suggestedWords, setSuggestedWords] = useState(null);
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
-
-  const {
-    initEngine,
-    isLoaded,
-    toggleRecord,
-    isRecording,
-    transcript,
-    error,
-    isBusy,
-  } = useSpeechToText();
-
-  useEffect(() => {
-    setSearch(transcript);
-  }, [transcript]);
 
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
@@ -173,32 +158,8 @@ const HomePage = ({ user }) => {
                 </button>
               ) : null}
             </div>
-            <div className="flex gap-2">
-              {!isLoaded &&
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    initEngine();
-                  }}
-                >
-                  Voice Search
-                </button>}
-              {isLoaded && !error && (
-                <button
-                  disabled={!isLoaded}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleRecord();
-                  }}
-                >
-                  {isRecording ? "Stop Recording" : "Start Recording"}
-                </button>
-              )}
-              {isBusy && <div>initializing...</div>}
-            </div>
           </div>
         </form>
-
         <section className="">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
@@ -228,7 +189,7 @@ const HomePage = ({ user }) => {
               </div>
             )}
 
-            {notFound && suggestedWords?.length > 0 && (
+            {notFound && suggestedWords.length > 0 && (
               <div className="">
                 <p>Did you mean? </p>
                 <div className="flex gap-2 flex-wrap">
@@ -246,7 +207,6 @@ const HomePage = ({ user }) => {
                 </div>
               </div>
             )}
-            {error && <p className="error-message">{error.toString()}</p>}
           </div>
         </section>
       </div>
