@@ -8,6 +8,7 @@ import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
 import useSetTitle from "../hooks/useSetTitle";
 import { toast } from "react-toastify";
+import signUpImg from "../assets/bibliophile.svg";
 
 const SignUp = () => {
   useSetTitle("SignUp");
@@ -38,16 +39,24 @@ const SignUp = () => {
     return <Navigate to={"/"} />;
   }
   return (
-    <main>
-      <section className="flex justify-center text-center">
-        <div className=" flex flex-col gap-4">
-          <h3>Sign Up</h3>
+    <main className="my-10">
+      <section className="flex justify-around text-center">
+        <div className="hidden lg:block">
+          <img src={signUpImg} className="w-96" alt="sign up" />
+        </div>
+        <div className="flex flex-col gap-8 self-center">
+          <h1 className="font-heading font-bold">Sign Up</h1>
           <form>
-            <div className="flex flex-col gap-4 justify-between">
+            <div className="flex flex-col gap-6 justify-between">
               <div className="flex gap-4">
-                <label htmlFor="email">Email address</label>
+                <label
+                  htmlFor="email"
+                  className="font-subHead font-semibold text-lg"
+                >
+                  Email address
+                </label>
                 <input
-                  className="dark:bg-gray-800"
+                  className="dark:bg-gray-800 rounded-sm px-1 lg:text-lg"
                   type="email"
                   label="Email address"
                   value={email}
@@ -60,9 +69,14 @@ const SignUp = () => {
               </div>
 
               <div className="flex gap-4 justify-between">
-                <label htmlFor="password">Password</label>
+                <label
+                  htmlFor="password"
+                  className="font-subHead font-semibold text-lg"
+                >
+                  Password
+                </label>
                 <input
-                  className="dark:bg-gray-800"
+                  className="dark:bg-gray-800 rounded-sm px-1 lg:text-lg"
                   type="password"
                   label="Create password"
                   value={password}
@@ -74,14 +88,23 @@ const SignUp = () => {
                 />
               </div>
 
-              <button className="border" type="submit" onClick={onSubmit}>
-                Sign up
-              </button>
+              <div className="rounded-sm shadow-md bg-primary hover:shadow-lg">
+                <button
+                  className="w-full text-lg font-medium text-gray-100"
+                  type="submit"
+                  onClick={onSubmit}
+                >
+                  Sign Up
+                </button>
+              </div>
             </div>
           </form>
 
           <p>
-            Already have an account? <Link to="/login">Sign in</Link>
+            Already have an account?{" "}
+            <Link className="text-primary font-medium" to="/login">
+              Sign in
+            </Link>
           </p>
         </div>
       </section>
