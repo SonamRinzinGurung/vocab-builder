@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
 import useWindowSize from "../hooks/useWindowSize";
-
+import ClipLoader from "react-spinners/ClipLoader";
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
 
@@ -31,6 +31,7 @@ const HomePage = ({ user }) => {
   const [suggestedWords, setSuggestedWords] = useState(null);
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
@@ -59,17 +60,20 @@ const HomePage = ({ user }) => {
 
   const { mutate: searchWord } = useMutation({
     mutationFn: async (search) => {
+      setIsLoading(true)
       return await axios(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${search}`
       );
     },
     onSuccess: ({ data }) => {
+      setIsLoading(false)
       setNotFound(false);
       setDefinition(data[0]);
       setWordAddStatus(false);
       setSuggestedWords(null);
     },
     onError: () => {
+      setIsLoading(false)
       getWordSuggestion(search, setSuggestedWords);
       setDefinition(null);
       setNotFound(true);
@@ -79,6 +83,7 @@ const HomePage = ({ user }) => {
 
   const { mutate: addDefinition } = useMutation({
     mutationFn: async () => {
+      setIsLoading(true)
       return await addDoc(collection(db, "vocab"), {
         ...definition,
         uid: user.uid,
@@ -86,11 +91,13 @@ const HomePage = ({ user }) => {
       });
     },
     onSuccess: () => {
+      setIsLoading(false)
       setWordAddStatus(true);
       toast.success("Word and its definition successfully added.");
       queryClient.invalidateQueries("vocab-all");
     },
     onError: (data) => {
+      setIsLoading(false)
       toast.error("Error occurred!");
       console.log(console.log(data));
     },
@@ -152,11 +159,15 @@ const HomePage = ({ user }) => {
               >
                 Search
               </button>
-              {definition && !wordAddStatus ? (
+              {definition && !wordAddStatus && !isLoading && (
                 <button className="border px-2" onClick={handleAddDefinition}>
                   Add
                 </button>
-              ) : null}
+              )}
+              <ClipLoader
+                size={25}
+                color="#6187D1"
+                loading={isLoading} />
             </div>
           </div>
         </form>

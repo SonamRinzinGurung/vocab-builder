@@ -124,7 +124,7 @@ const VocabMountain = ({ user }) => {
 
   if (error) return "An error has occurred: " + error.message;
 
-  if (isPending || isQueryLoading) return <div>Loading...</div>;
+  if (isPending || isQueryLoading) return null;
 
   return (
     <main>
