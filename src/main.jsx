@@ -11,6 +11,7 @@ const VocabMountain = lazy(() => import("./routes/VocabMountain"));
 const Root = lazy(() => import("./components/Root"));
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import VerifyNotice from "./routes/VerifyNotice";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const queryClient = new QueryClient();
 
@@ -54,7 +55,22 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <ClipLoader
+          size={150}
+          color="#6187D1"
+          cssOverride={{
+            margin: "auto",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        />
+      }
+    >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>

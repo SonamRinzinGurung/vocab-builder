@@ -18,8 +18,9 @@ import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { toast } from "react-toastify";
 import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
-import useWindowSize from "../hooks/useWindowSize";
 import ClipLoader from "react-spinners/ClipLoader";
+import { IoIosSearch } from "react-icons/io";
+
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
 
@@ -41,8 +42,6 @@ const HomePage = ({ user }) => {
   });
 
   const { playing, playPause } = useAudio(definition?.phonetics);
-  const { isMobile } = useWindowSize();
-
   useQuery({
     queryKey: ["vocab-all"],
     queryFn: async () => {
@@ -60,20 +59,20 @@ const HomePage = ({ user }) => {
 
   const { mutate: searchWord } = useMutation({
     mutationFn: async (search) => {
-      setIsLoading(true)
+      setIsLoading(true);
       return await axios(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${search}`
       );
     },
     onSuccess: ({ data }) => {
-      setIsLoading(false)
+      setIsLoading(false);
       setNotFound(false);
       setDefinition(data[0]);
       setWordAddStatus(false);
       setSuggestedWords(null);
     },
     onError: () => {
-      setIsLoading(false)
+      setIsLoading(false);
       getWordSuggestion(search, setSuggestedWords);
       setDefinition(null);
       setNotFound(true);
@@ -83,7 +82,7 @@ const HomePage = ({ user }) => {
 
   const { mutate: addDefinition } = useMutation({
     mutationFn: async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       return await addDoc(collection(db, "vocab"), {
         ...definition,
         uid: user.uid,
@@ -91,13 +90,13 @@ const HomePage = ({ user }) => {
       });
     },
     onSuccess: () => {
-      setIsLoading(false)
+      setIsLoading(false);
       setWordAddStatus(true);
       toast.success("Word and its definition successfully added.");
       queryClient.invalidateQueries("vocab-all");
     },
     onError: (data) => {
-      setIsLoading(false)
+      setIsLoading(false);
       toast.error("Error occurred!");
       console.log(console.log(data));
     },
@@ -136,39 +135,38 @@ const HomePage = ({ user }) => {
   return (
     <main className="mx-4 my-10">
       <div className="flex flex-col gap-4 ">
-        <div>
-          <p>Search for the new word you learned</p>
+        <div className="text-center lg:text-start">
+          <p className="font-subHead opacity-50">search for the new word you&apos;ve learned</p>
         </div>
         <form>
-          <div className="flex flex-col gap-4 items-center lg:flex-row">
-            <input
-              ref={searchBoxRef}
-              className="lg:w-1/2 w-full dark:bg-gray-800"
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              name="search"
-              placeholder={isMobile ? "Search" : "Search    press /"}
-            />
-            <div className="flex gap-4">
+          <div className="flex gap-4 flex-col lg:flex-row items-center">
+            <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
+              <input
+                ref={searchBoxRef}
+                className="bg:white dark:bg-gray-800 outline-none"
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                name="search"
+                placeholder="Search"
+              />
+              <p className="px-2 text-gray-400 hidden lg:block">Press /</p>
               <button
-                disabled={search ? false : true}
-                className="border px-2"
+                disabled={!search}
+                className="cursor-pointer"
                 onClick={handleSearch}
                 type="submit"
               >
-                Search
+                <IoIosSearch size={25} />
               </button>
-              {definition && !wordAddStatus && !isLoading && (
-                <button className="border px-2" onClick={handleAddDefinition}>
-                  Add
-                </button>
-              )}
-              <ClipLoader
-                size={25}
-                color="#6187D1"
-                loading={isLoading} />
             </div>
+
+            {definition && !wordAddStatus && !isLoading && (
+              <button className="px-4 lg:self-stretch  rounded-sm bg-primary text-gray-100 w-fit" onClick={handleAddDefinition}>
+                Add
+              </button>
+            )}
+            <ClipLoader size={25} color="#6187D1" loading={isLoading} />
           </div>
         </form>
         <section className="">
@@ -204,15 +202,14 @@ const HomePage = ({ user }) => {
               <div className="">
                 <p>Did you mean? </p>
                 <div className="flex gap-2 flex-wrap">
-                  {suggestedWords.map((word, index) => {
+                  {suggestedWords.map((word, i) => {
                     return (
-                      <div
-                        className="cursor-pointer"
+                      <button
                         onClick={() => searchSuggestedWord(word)}
-                        key={index}
+                        key={i}
                       >
                         {word}
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
