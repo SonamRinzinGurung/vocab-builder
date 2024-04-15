@@ -1,17 +1,18 @@
-import { useState, useRef } from "react";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
-import { db } from "../firebase-config";
-import DefinitionGroup from "../components/DefinitionGroup";
 import { useQuery } from "@tanstack/react-query";
-import PropTypes from "prop-types";
-import useSetTitle from "../hooks/useSetTitle";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import Fuse from "fuse.js";
-import useKeyPress from "../hooks/useKeyPress";
+import PropTypes from "prop-types";
+import { useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
-import { IoArrowUp, IoArrowDown } from "react-icons/io5";
-import MenuModal from "../components/MenuModal";
-import { CiFilter } from "react-icons/ci";
+import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { TiSortAlphabetically } from "react-icons/ti";
+import DefinitionGroup from "../components/DefinitionGroup";
+import MenuModal from "../components/MenuModal";
+import ToolTip from "../components/ToolTip";
+import { db } from "../firebase-config";
+import useKeyPress from "../hooks/useKeyPress";
+import useSetTitle from "../hooks/useSetTitle";
+import { FaSortAmountDown } from "react-icons/fa";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -22,8 +23,9 @@ const VocabMountain = ({ user }) => {
   const [suggestedWords, setSuggestedWords] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [modal, setModal] = useState(false);
-  const modalRef = useRef(null);
   const searchBoxRef = useRef(null);
+  const modalRef = useRef(null);
+  const tooltipRef = useRef(null);
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
       event.preventDefault();
@@ -177,11 +179,12 @@ const VocabMountain = ({ user }) => {
               </div>
               <div
                 ref={modalRef}
-                className="relative"
+                className="tooltipWrapper relative"
                 onClick={() => setModal((prev) => !prev)}
               >
-                <div className="cursor-pointer">
-                  <CiFilter size={30} />
+                <div className="cursor-pointer" ref={tooltipRef}>
+                  <FaSortAmountDown size={28} />
+                  <ToolTip text="Sort" contentRef={tooltipRef} />
                 </div>
                 {modal && (
                   <MenuModal
