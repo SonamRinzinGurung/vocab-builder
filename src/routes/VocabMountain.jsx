@@ -8,6 +8,10 @@ import useSetTitle from "../hooks/useSetTitle";
 import Fuse from "fuse.js";
 import useKeyPress from "../hooks/useKeyPress";
 import { IoIosSearch } from "react-icons/io";
+import { IoArrowUp, IoArrowDown } from "react-icons/io5";
+import MenuModal from "../components/MenuModal";
+import { CiFilter } from "react-icons/ci";
+import { TiSortAlphabetically } from "react-icons/ti";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -17,6 +21,8 @@ const VocabMountain = ({ user }) => {
   const [dateSort, setDateSort] = useState("desc");
   const [suggestedWords, setSuggestedWords] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [modal, setModal] = useState(false);
+  const modalRef = useRef(null);
   const searchBoxRef = useRef(null);
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
@@ -81,6 +87,7 @@ const VocabMountain = ({ user }) => {
 
   const handleSort = (e) => {
     e.preventDefault();
+    setDateSort("desc"); // reset date sort
 
     if (isSorted) {
       setResult(data);
@@ -103,6 +110,7 @@ const VocabMountain = ({ user }) => {
 
   const handleDateSort = (e) => {
     e.preventDefault();
+    setIsSorted(false); // rest alphabetic sort
 
     if (dateSort === "desc") {
       setDateSort("asc");
@@ -141,7 +149,7 @@ const VocabMountain = ({ user }) => {
         <div>
           <h1 className="text-center lg:text-start">Vocab Mountain</h1>
           <form>
-            <div className="flex gap-4 flex-col lg:flex-row items-center">
+            <div className="flex gap-2 flex-row items-center">
               <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
                 <input
                   ref={searchBoxRef}
@@ -152,7 +160,13 @@ const VocabMountain = ({ user }) => {
                   name="search"
                   placeholder="Search"
                 />
-                <p className="px-2 text-gray-400 hidden lg:block">Press /</p>
+
+                <p
+                  className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
+                    }`}
+                >
+                  Press /
+                </p>
                 <button
                   className="cursor-pointer"
                   onClick={handleSearch}
@@ -161,13 +175,48 @@ const VocabMountain = ({ user }) => {
                   <IoIosSearch size={25} />
                 </button>
               </div>
-              <div className="flex gap-4">
-                <button onClick={handleSort}>
-                  {isSorted ? "UnSort" : "Sort"}
-                </button>
-                <button onClick={handleDateSort}>
-                  Date {dateSort === "desc" ? "desc" : "asc"}
-                </button>
+              <div
+                ref={modalRef}
+                className="relative"
+                onClick={() => setModal((prev) => !prev)}
+              >
+                <div className="cursor-pointer">
+                  <CiFilter size={30} />
+                </div>
+                {modal && (
+                  <MenuModal
+                    className="w-24 lg:w-40 z-50 right-2 top-8"
+                    modalRef={modalRef}
+                    setModal={setModal}
+                  >
+                    <div className="">
+                      <div
+                        onClick={handleSort}
+                        className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
+                      >
+                        <div className="flex items-center gap-1">
+                          <div>{isSorted ? "UnSort" : "Sort"}</div>
+                          {!isSorted && <TiSortAlphabetically />}
+                        </div>
+                      </div>
+                      <div
+                        onClick={handleDateSort}
+                        className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
+                      >
+                        <div className="flex items-center">
+                          <div>Date</div>
+                          <div>
+                            {dateSort === "desc" ? (
+                              <IoArrowUp />
+                            ) : (
+                              <IoArrowDown />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </MenuModal>
+                )}
               </div>
             </div>
           </form>
@@ -178,7 +227,7 @@ const VocabMountain = ({ user }) => {
             <p>This word is not in your vocab mountain.</p>
           </div>
         )}
-        {notFound && suggestedWords.length > 0 && (
+        {notFound && suggestedWords?.length > 0 && (
           <div className="">
             <p>Did you mean? </p>
             <div className="flex gap-2 flex-wrap">

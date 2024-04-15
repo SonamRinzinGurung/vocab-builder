@@ -160,7 +160,7 @@ const HomePage = ({ user }) => {
                 name="search"
                 placeholder="Search"
               />
-              <p className="px-2 text-gray-400 hidden lg:block">Press /</p>
+              <p className={`px-2 text-gray-400 hidden lg:block ${search && 'invisible'}`}>Press /</p>
               <button
                 className="cursor-pointer"
                 onClick={handleSearch}
@@ -210,7 +210,7 @@ const HomePage = ({ user }) => {
               </div>
             )}
 
-            {notFound && suggestedWords.length > 0 && (
+            {notFound && suggestedWords?.length > 0 && (
               <div className="">
                 <p>Did you mean? </p>
                 <div className="flex gap-2 flex-wrap">
