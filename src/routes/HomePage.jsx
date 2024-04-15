@@ -104,6 +104,14 @@ const HomePage = ({ user }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+
+    if (search.trim() === "") {
+      setDefinition(null);
+      setNotFound(false);
+      setWordAddStatus(false);
+      setSuggestedWords(null);
+      return;
+    }
     searchWord(search);
   };
 
@@ -136,7 +144,9 @@ const HomePage = ({ user }) => {
     <main className="mx-4 my-10">
       <div className="flex flex-col gap-4 ">
         <div className="text-center lg:text-start">
-          <p className="font-subHead opacity-50">search for the new word you&apos;ve learned</p>
+          <p className="font-subHead opacity-50">
+            search for the new word you&apos;ve learned
+          </p>
         </div>
         <form>
           <div className="flex gap-4 flex-col lg:flex-row items-center">
@@ -152,7 +162,6 @@ const HomePage = ({ user }) => {
               />
               <p className="px-2 text-gray-400 hidden lg:block">Press /</p>
               <button
-                disabled={!search}
                 className="cursor-pointer"
                 onClick={handleSearch}
                 type="submit"
@@ -162,7 +171,10 @@ const HomePage = ({ user }) => {
             </div>
 
             {definition && !wordAddStatus && !isLoading && (
-              <button className="px-4 lg:self-stretch  rounded-sm bg-primary text-gray-100 w-fit" onClick={handleAddDefinition}>
+              <button
+                className="px-4 lg:self-stretch  rounded-sm bg-primary text-gray-100 w-fit"
+                onClick={handleAddDefinition}
+              >
                 Add
               </button>
             )}
@@ -204,10 +216,7 @@ const HomePage = ({ user }) => {
                 <div className="flex gap-2 flex-wrap">
                   {suggestedWords.map((word, i) => {
                     return (
-                      <button
-                        onClick={() => searchSuggestedWord(word)}
-                        key={i}
-                      >
+                      <button onClick={() => searchSuggestedWord(word)} key={i}>
                         {word}
                       </button>
                     );

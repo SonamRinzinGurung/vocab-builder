@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
 import Fuse from "fuse.js";
 import useKeyPress from "../hooks/useKeyPress";
-import useWindowSize from "../hooks/useWindowSize";
+import { IoIosSearch } from "react-icons/io";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -18,7 +18,6 @@ const VocabMountain = ({ user }) => {
   const [suggestedWords, setSuggestedWords] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const searchBoxRef = useRef(null);
-  const { isMobile } = useWindowSize();
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
       event.preventDefault();
@@ -62,8 +61,10 @@ const VocabMountain = ({ user }) => {
       if (word.toLowerCase().startsWith(search.toLocaleLowerCase())) {
         searchResult.push(definition);
       }
+      return null;
     });
     setResult(searchResult);
+    setNotFound(false);
 
     if (searchResult.length === 0) {
       const options = {
@@ -86,9 +87,15 @@ const VocabMountain = ({ user }) => {
       setSearch("");
       setIsSorted(false);
     } else {
-      const sortedResult = [...result]?.sort((a, b) =>
-        a.word > b.word ? 1 : b.word > a.word ? -1 : 0
-      );
+      const sortedResult = [...result]?.sort((a, b) => {
+        if (a.word > b.word) {
+          return 1;
+        } else if (b.word > a.word) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
       setResult(sortedResult);
       setIsSorted(true);
     }
@@ -116,7 +123,9 @@ const VocabMountain = ({ user }) => {
       if (word.toLocaleLowerCase() === suggestedWord.toLocaleLowerCase()) {
         searchResult.push(definition);
       }
+      return null;
     });
+
     setResult(searchResult);
     setNotFound(false);
     setSuggestedWords(null);
@@ -130,25 +139,36 @@ const VocabMountain = ({ user }) => {
     <main>
       <div className="flex flex-col gap-4 mx-4 my-10">
         <div>
-          <h1>Vocab Mountain</h1>
+          <h1 className="text-center lg:text-start">Vocab Mountain</h1>
           <form>
-            <div className="flex gap-2">
-              <input
-                ref={searchBoxRef}
-                className="dark:bg-gray-800"
-                type="text"
-                name="search"
-                placeholder={isMobile ? "Search" : "Search    press /"}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <button onClick={handleSearch}>Search</button>
-              <button onClick={handleSort}>
-                {isSorted ? "UnSort" : "Sort"}
-              </button>
-              <button onClick={handleDateSort}>
-                Date {dateSort === "desc" ? "desc" : "asc"}
-              </button>
+            <div className="flex gap-4 flex-col lg:flex-row items-center">
+              <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
+                <input
+                  ref={searchBoxRef}
+                  className="bg:white dark:bg-gray-800 outline-none"
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  name="search"
+                  placeholder="Search"
+                />
+                <p className="px-2 text-gray-400 hidden lg:block">Press /</p>
+                <button
+                  className="cursor-pointer"
+                  onClick={handleSearch}
+                  type="submit"
+                >
+                  <IoIosSearch size={25} />
+                </button>
+              </div>
+              <div className="flex gap-4">
+                <button onClick={handleSort}>
+                  {isSorted ? "UnSort" : "Sort"}
+                </button>
+                <button onClick={handleDateSort}>
+                  Date {dateSort === "desc" ? "desc" : "asc"}
+                </button>
+              </div>
             </div>
           </form>
         </div>
@@ -164,13 +184,12 @@ const VocabMountain = ({ user }) => {
             <div className="flex gap-2 flex-wrap">
               {suggestedWords.map((word, index) => {
                 return (
-                  <div
-                    className="cursor-pointer"
+                  <button
                     key={index}
                     onClick={() => handleSearchSuggestedWord(word)}
                   >
                     {word}
-                  </div>
+                  </button>
                 );
               })}
             </div>
