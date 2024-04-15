@@ -25,7 +25,7 @@ const VocabMountain = ({ user }) => {
   const [modal, setModal] = useState(false);
   const searchBoxRef = useRef(null);
   const modalRef = useRef(null);
-  const tooltipRef = useRef(null);
+  const sortMenuRef = useRef(null);
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
       event.preventDefault();
@@ -179,12 +179,12 @@ const VocabMountain = ({ user }) => {
               </div>
               <div
                 ref={modalRef}
-                className="tooltipWrapper relative"
+                className="relative"
                 onClick={() => setModal((prev) => !prev)}
               >
-                <div className="cursor-pointer" ref={tooltipRef}>
+                <div className="cursor-pointer" ref={sortMenuRef}>
                   <FaSortAmountDown size={28} />
-                  <ToolTip text="Sort" contentRef={tooltipRef} />
+                  <ToolTip text="Sort" contentRef={sortMenuRef} />
                 </div>
                 {modal && (
                   <MenuModal

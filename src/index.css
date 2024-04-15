@@ -48,14 +48,3 @@ a {
 p {
   font-size: clamp(0.7rem, 2.3vw, 1rem);
 }
-
-.tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
