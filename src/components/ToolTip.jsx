@@ -26,10 +26,12 @@ const ToolTip = ({ text, contentRef, position }) => {
 
         contentRefInstance.addEventListener("mouseover", mouseOverHandler);
         contentRefInstance.addEventListener("mouseout", mouseOutHandler);
+        contentRefInstance.addEventListener("click", mouseOutHandler);
 
         return () => {
             contentRefInstance.removeEventListener("mouseover", mouseOverHandler);
             contentRefInstance.removeEventListener("mouseout", mouseOutHandler);
+            contentRefInstance.addEventListener("click", mouseOutHandler);
         };
     }, [isMobile]);
 
@@ -44,7 +46,7 @@ const ToolTip = ({ text, contentRef, position }) => {
         <span
             style={{
                 visibility: "hidden",
-                width: "120px",
+                minWidth: "110px",
                 backgroundColor: "#555",
                 color: "#f0f4f8",
                 textAlign: "center",
@@ -57,7 +59,7 @@ const ToolTip = ({ text, contentRef, position }) => {
                 transition: "opacity 0.3s",
                 ...positionObject,
             }}
-            className="tooltip"
+            className="tooltip font-mono text-sm tracking-tighter"
         >
             {text}
             <div style={arrowStyle}></div>

@@ -20,6 +20,7 @@ import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
 import ClipLoader from "react-spinners/ClipLoader";
 import { IoIosSearch } from "react-icons/io";
+import ToolTip from "../components/ToolTip";
 
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -32,6 +33,7 @@ const HomePage = ({ user }) => {
   const [suggestedWords, setSuggestedWords] = useState(null);
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
+  const addBtnRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useKeyPress("/", (event) => {
@@ -160,7 +162,12 @@ const HomePage = ({ user }) => {
                 name="search"
                 placeholder="Search"
               />
-              <p className={`px-2 text-gray-400 hidden lg:block ${search && 'invisible'}`}>Press /</p>
+              <p
+                className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
+                  }`}
+              >
+                Press /
+              </p>
               <button
                 className="cursor-pointer"
                 onClick={handleSearch}
@@ -172,10 +179,12 @@ const HomePage = ({ user }) => {
 
             {definition && !wordAddStatus && !isLoading && (
               <button
-                className="px-4 lg:self-stretch  rounded-sm bg-primary text-gray-100 w-fit"
+                className="relative px-4 lg:self-stretch rounded-sm bg-primary text-gray-100 w-fit"
                 onClick={handleAddDefinition}
+                ref={addBtnRef}
               >
                 Add
+                <ToolTip text="add to vocab mountain" contentRef={addBtnRef} />
               </button>
             )}
             <ClipLoader size={25} color="#6187D1" loading={isLoading} />
@@ -188,7 +197,7 @@ const HomePage = ({ user }) => {
               <div className="text-sm">{definition?.phonetic}</div>
 
               {definition?.phonetics && (
-                <button onClick={playPause}>
+                <button onClick={playPause} className="w-fit">
                   {playing ? <CiPause1 /> : <CiPlay1 />}
                 </button>
               )}

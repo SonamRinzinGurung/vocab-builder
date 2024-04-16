@@ -155,7 +155,7 @@ const NavBar = () => {
         <button onClick={toggleDarkMode} ref={darkModeBtnRef}>
           {darkMode ? <CiLight size="30" /> : <CiDark size="30" />}
           <ToolTip
-            text={darkMode ? "Switch to light" : "Switch to dark"}
+            text={darkMode ? "switch to light" : "switch to dark"}
             contentRef={darkModeBtnRef}
             position="left"
           />

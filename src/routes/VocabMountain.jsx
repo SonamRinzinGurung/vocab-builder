@@ -148,82 +148,84 @@ const VocabMountain = ({ user }) => {
   return (
     <main>
       <div className="flex flex-col gap-4 mx-4 my-10">
-        <div>
-          <h1 className="text-center lg:text-start">Vocab Mountain</h1>
-          <form>
-            <div className="flex gap-2 flex-row items-center">
-              <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
-                <input
-                  ref={searchBoxRef}
-                  className="bg:white dark:bg-gray-800 outline-none"
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  name="search"
-                  placeholder="Search"
-                />
+        <div className="text-center lg:text-start">
+          <p className="font-subHead opacity-50">
+            these are the words you&apos;ve selected to learn
+          </p>
+        </div>
+        <form>
+          <div className="flex gap-2 flex-row items-center">
+            <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
+              <input
+                ref={searchBoxRef}
+                className="bg:white dark:bg-gray-800 outline-none"
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                name="search"
+                placeholder="Search"
+              />
 
-                <p
-                  className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
-                    }`}
-                >
-                  Press /
-                </p>
-                <button
-                  className="cursor-pointer"
-                  onClick={handleSearch}
-                  type="submit"
-                >
-                  <IoIosSearch size={25} />
-                </button>
-              </div>
-              <div
-                ref={modalRef}
-                className="relative"
-                onClick={() => setModal((prev) => !prev)}
+              <p
+                className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
+                  }`}
               >
-                <div className="cursor-pointer" ref={sortMenuRef}>
-                  <FaSortAmountDown size={28} />
-                  <ToolTip text="Sort" contentRef={sortMenuRef} />
-                </div>
-                {modal && (
-                  <MenuModal
-                    className="w-24 lg:w-40 z-50 right-2 top-8"
-                    modalRef={modalRef}
-                    setModal={setModal}
-                  >
-                    <div className="">
-                      <div
-                        onClick={handleSort}
-                        className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
-                      >
-                        <div className="flex items-center gap-1">
-                          <div>{isSorted ? "UnSort" : "Sort"}</div>
-                          {!isSorted && <TiSortAlphabetically />}
-                        </div>
+                Press /
+              </p>
+              <button
+                className="cursor-pointer"
+                onClick={handleSearch}
+                type="submit"
+              >
+                <IoIosSearch size={25} />
+              </button>
+            </div>
+            <div
+              ref={modalRef}
+              className="relative"
+              onClick={() => setModal((prev) => !prev)}
+            >
+              <div className="cursor-pointer" ref={sortMenuRef}>
+                <FaSortAmountDown size={28} />
+                <ToolTip text="sort" contentRef={sortMenuRef} />
+              </div>
+              {modal && (
+                <MenuModal
+                  className="w-24 lg:w-40 z-50 right-2 top-8"
+                  modalRef={modalRef}
+                  setModal={setModal}
+                >
+                  <div className="">
+                    <div
+                      onClick={handleSort}
+                      className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-1">
+                        <div>{isSorted ? "UnSort" : "Sort"}</div>
+                        {!isSorted && <TiSortAlphabetically />}
                       </div>
-                      <div
-                        onClick={handleDateSort}
-                        className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
-                      >
-                        <div className="flex items-center">
-                          <div>Date</div>
-                          <div>
-                            {dateSort === "desc" ? (
-                              <IoArrowUp />
-                            ) : (
-                              <IoArrowDown />
-                            )}
-                          </div>
+                    </div>
+                    <div
+                      onClick={handleDateSort}
+                      className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
+                    >
+                      <div className="flex items-center">
+                        <div>Date</div>
+                        <div>
+                          {dateSort === "desc" ? (
+                            <IoArrowUp />
+                          ) : (
+                            <IoArrowDown />
+                          )}
                         </div>
                       </div>
                     </div>
-                  </MenuModal>
-                )}
-              </div>
+                  </div>
+                </MenuModal>
+              )}
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
 
         {notFound && (
           <div>

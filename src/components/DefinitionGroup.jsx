@@ -9,11 +9,13 @@ import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import ToolTip from "./ToolTip";
 
 const DefinitionGroup = ({ vocab }) => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
+  const optionRef = useRef(null);
   const queryClient = useQueryClient();
   const { playing, playPause } = useAudio(vocab?.phonetics);
 
@@ -44,12 +46,22 @@ const DefinitionGroup = ({ vocab }) => {
           className="relative"
           onClick={() => setModal((prev) => !prev)}
         >
-          <div className=" p-2 rounded-md cursor-pointer ml-1">
+          <div className="p-1 rounded-md cursor-pointer ml-1" ref={optionRef}>
             <BsThreeDots />
+            <ToolTip position={"right"} text="options" contentRef={optionRef} />
           </div>
           {modal && (
-            <MenuModal className={"z-50 w-24 lg:w-40 top-6"} modalRef={modalRef} setModal={setModal}>
-              <button onClick={() => removeWord(vocab?.id)} className="rounded-sm hover:text-red-500">Remove</button>
+            <MenuModal
+              className={"z-50 w-24 lg:w-40 top-6"}
+              modalRef={modalRef}
+              setModal={setModal}
+            >
+              <button
+                onClick={() => removeWord(vocab?.id)}
+                className="rounded-sm hover:text-red-500"
+              >
+                Remove
+              </button>
             </MenuModal>
           )}
         </div>
