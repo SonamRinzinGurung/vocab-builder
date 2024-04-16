@@ -43,7 +43,8 @@ const HomePage = ({ user }) => {
     }
   });
 
-  const { playing, playPause } = useAudio(definition?.phonetics);
+  const { playing, playPause, url } = useAudio(definition?.phonetics);
+
   useQuery({
     queryKey: ["vocab-all"],
     queryFn: async () => {
@@ -197,7 +198,7 @@ const HomePage = ({ user }) => {
 
               <div className="flex gap-2">
                 <div className="text-sm">{definition?.phonetic}</div>
-              {definition?.phonetics && (
+                {url && (
                   <button onClick={playPause} className="w-fit h-fit self-end">
                   {playing ? <CiPause1 /> : <CiPlay1 />}
                 </button>

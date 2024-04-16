@@ -17,7 +17,7 @@ const DefinitionGroup = ({ vocab }) => {
   const modalRef = useRef(null);
   const optionRef = useRef(null);
   const queryClient = useQueryClient();
-  const { playing, playPause } = useAudio(vocab?.phonetics);
+  const { playing, playPause, url } = useAudio(vocab?.phonetics);
 
   const { mutate: removeWord } = useMutation({
     mutationFn: async (id) => {
@@ -69,7 +69,7 @@ const DefinitionGroup = ({ vocab }) => {
       {open && (
         <div className="flex gap-2 items-center">
           <div className="text-sm">{vocab?.phonetic}</div>
-          {vocab?.phonetics && (
+          {url && (
             <button onClick={playPause}>
               {playing ? <CiPause1 /> : <CiPlay1 />}
             </button>

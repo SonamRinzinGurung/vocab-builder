@@ -31,7 +31,7 @@ const useAudio = (urls) => {
     audio.src = url?.audio;
   }, [url]);
 
-  return { playing, playPause };
+  return { playing, playPause, url };
 };
 
 export default useAudio;
