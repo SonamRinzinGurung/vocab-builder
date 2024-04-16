@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import WordMeaningGroup from "./WordMeaningGroup";
 import PropTypes from "prop-types";
 import MenuModal from "./MenuModal";
@@ -9,11 +9,13 @@ import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import ToolTip from "./ToolTip";
 
 const DefinitionGroup = ({ vocab }) => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
+  const optionRef = useRef(null);
   const queryClient = useQueryClient();
   const { playing, playPause } = useAudio(vocab?.phonetics);
 
@@ -30,19 +32,6 @@ const DefinitionGroup = ({ vocab }) => {
     },
   });
 
-  useEffect(() => {
-    function listenClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setModal(false);
-      }
-    }
-    document.addEventListener("mousedown", listenClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", listenClickOutside);
-    };
-  }, [setModal]);
-
   return (
     <>
       <div className="w-1/2 md:w-1/6 flex justify-between items-center">
@@ -57,10 +46,24 @@ const DefinitionGroup = ({ vocab }) => {
           className="relative"
           onClick={() => setModal((prev) => !prev)}
         >
-          <div className="border p-2 rounded-md cursor-pointer ml-1">
+          <div className="p-1 rounded-md cursor-pointer ml-1" ref={optionRef}>
             <BsThreeDots />
+            <ToolTip position={"right"} text="options" contentRef={optionRef} />
           </div>
-          {modal && <MenuModal vocabId={vocab.id} handleRemove={removeWord} />}
+          {modal && (
+            <MenuModal
+              className={"z-50 w-24 lg:w-40 top-6"}
+              modalRef={modalRef}
+              setModal={setModal}
+            >
+              <button
+                onClick={() => removeWord(vocab?.id)}
+                className="rounded-sm hover:text-red-500"
+              >
+                Remove
+              </button>
+            </MenuModal>
+          )}
         </div>
       </div>
       {open && (

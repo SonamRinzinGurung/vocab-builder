@@ -20,6 +20,7 @@ import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
 import ClipLoader from "react-spinners/ClipLoader";
 import { IoIosSearch } from "react-icons/io";
+import ToolTip from "../components/ToolTip";
 
 const HomePage = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -32,6 +33,7 @@ const HomePage = ({ user }) => {
   const [suggestedWords, setSuggestedWords] = useState(null);
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
+  const addBtnRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useKeyPress("/", (event) => {
@@ -104,6 +106,14 @@ const HomePage = ({ user }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+
+    if (search.trim() === "") {
+      setDefinition(null);
+      setNotFound(false);
+      setWordAddStatus(false);
+      setSuggestedWords(null);
+      return;
+    }
     searchWord(search);
   };
 
@@ -136,7 +146,9 @@ const HomePage = ({ user }) => {
     <main className="mx-4 my-10">
       <div className="flex flex-col gap-4 ">
         <div className="text-center lg:text-start">
-          <p className="font-subHead opacity-50">search for the new word you&apos;ve learned</p>
+          <p className="font-subHead opacity-50">
+            search for the new word you&apos;ve learned
+          </p>
         </div>
         <form>
           <div className="flex gap-4 flex-col lg:flex-row items-center">
@@ -150,9 +162,13 @@ const HomePage = ({ user }) => {
                 name="search"
                 placeholder="Search"
               />
-              <p className="px-2 text-gray-400 hidden lg:block">Press /</p>
+              <p
+                className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
+                  }`}
+              >
+                Press /
+              </p>
               <button
-                disabled={!search}
                 className="cursor-pointer"
                 onClick={handleSearch}
                 type="submit"
@@ -162,8 +178,13 @@ const HomePage = ({ user }) => {
             </div>
 
             {definition && !wordAddStatus && !isLoading && (
-              <button className="px-4 lg:self-stretch  rounded-sm bg-primary text-gray-100 w-fit" onClick={handleAddDefinition}>
+              <button
+                className="relative px-4 lg:self-stretch rounded-sm bg-primary text-gray-100 w-fit"
+                onClick={handleAddDefinition}
+                ref={addBtnRef}
+              >
                 Add
+                <ToolTip text="add to vocab mountain" contentRef={addBtnRef} />
               </button>
             )}
             <ClipLoader size={25} color="#6187D1" loading={isLoading} />
@@ -176,7 +197,7 @@ const HomePage = ({ user }) => {
               <div className="text-sm">{definition?.phonetic}</div>
 
               {definition?.phonetics && (
-                <button onClick={playPause}>
+                <button onClick={playPause} className="w-fit">
                   {playing ? <CiPause1 /> : <CiPlay1 />}
                 </button>
               )}
@@ -198,16 +219,13 @@ const HomePage = ({ user }) => {
               </div>
             )}
 
-            {notFound && suggestedWords.length > 0 && (
+            {notFound && suggestedWords?.length > 0 && (
               <div className="">
                 <p>Did you mean? </p>
                 <div className="flex gap-2 flex-wrap">
                   {suggestedWords.map((word, i) => {
                     return (
-                      <button
-                        onClick={() => searchSuggestedWord(word)}
-                        key={i}
-                      >
+                      <button onClick={() => searchSuggestedWord(word)} key={i}>
                         {word}
                       </button>
                     );

@@ -5,10 +5,12 @@ import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
 import { ToastContainer, Slide } from "react-toastify";
 import { CiLight, CiDark } from "react-icons/ci";
+import ToolTip from "./ToolTip";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const modalRef = useRef(null);
+  const darkModeBtnRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const { user, isLoading } = useAuth();
@@ -149,9 +151,14 @@ const NavBar = () => {
         </div>
       </div>
 
-      <div className="ml-auto mt-1 px-4">
-        <button onClick={toggleDarkMode}>
+      <div className="relative ml-auto mt-1 pr-4">
+        <button onClick={toggleDarkMode} ref={darkModeBtnRef}>
           {darkMode ? <CiLight size="30" /> : <CiDark size="30" />}
+          <ToolTip
+            text={darkMode ? "switch to light" : "switch to dark"}
+            contentRef={darkModeBtnRef}
+            position="left"
+          />
         </button>
       </div>
 
