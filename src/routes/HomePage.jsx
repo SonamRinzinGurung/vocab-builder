@@ -43,7 +43,8 @@ const HomePage = ({ user }) => {
     }
   });
 
-  const { playing, playPause } = useAudio(definition?.phonetics);
+  const { playing, playPause, url } = useAudio(definition?.phonetics);
+
   useQuery({
     queryKey: ["vocab-all"],
     queryFn: async () => {
@@ -145,11 +146,12 @@ const HomePage = ({ user }) => {
   return (
     <main className="mx-4 my-10">
       <div className="flex flex-col gap-4 ">
-        <div className="text-center lg:text-start">
+        <header className="text-center lg:text-start">
+          <h1>Vocab Builder</h1>
           <p className="font-subHead opacity-50">
             search for the new word you&apos;ve learned
           </p>
-        </div>
+        </header>
         <form>
           <div className="flex gap-4 flex-col lg:flex-row items-center">
             <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
@@ -190,23 +192,25 @@ const HomePage = ({ user }) => {
             <ClipLoader size={25} color="#6187D1" loading={isLoading} />
           </div>
         </form>
-        <section className="">
+        <article className="mt-4">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <div>{definition?.word}</div>
-              <div className="text-sm">{definition?.phonetic}</div>
+            <div className="flex flex-col gap-1 ">
+              <div className="font-subHead text-3xl tracking-wide">{definition?.word}</div>
 
-              {definition?.phonetics && (
-                <button onClick={playPause} className="w-fit">
+              <div className="flex gap-2">
+                <div className="text-sm">{definition?.phonetic}</div>
+                {url && (
+                  <button onClick={playPause} className="w-fit h-fit self-end">
                   {playing ? <CiPause1 /> : <CiPlay1 />}
                 </button>
               )}
+              </div>
             </div>
 
             {definition?.meanings.map((meaning, index) => {
               return (
                 <div key={index}>
-                  <div>{meaning.partOfSpeech}</div>
+                  <div className="italic opacity-85">{meaning.partOfSpeech}</div>
 
                   <WordMeaningGroup meaning={meaning} />
                 </div>
@@ -215,17 +219,17 @@ const HomePage = ({ user }) => {
 
             {notFound && (
               <div>
-                <p>No definition for the word found.</p>
+                <span className="italic">No definition for the word found</span>
               </div>
             )}
 
             {notFound && suggestedWords?.length > 0 && (
               <div className="">
-                <p>Did you mean? </p>
-                <div className="flex gap-2 flex-wrap">
+                <div className="font-subHead tracking-wider">Did you mean? </div>
+                <div className="flex gap-4 flex-wrap">
                   {suggestedWords.map((word, i) => {
                     return (
-                      <button onClick={() => searchSuggestedWord(word)} key={i}>
+                      <button className="mt-1 border px-4 rounded-xl dark:hover:bg-gray-700 hover:bg-slate-300" onClick={() => searchSuggestedWord(word)} key={i}>
                         {word}
                       </button>
                     );
@@ -234,7 +238,7 @@ const HomePage = ({ user }) => {
               </div>
             )}
           </div>
-        </section>
+        </article>
       </div>
     </main>
   );

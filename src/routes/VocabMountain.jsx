@@ -26,6 +26,7 @@ const VocabMountain = ({ user }) => {
   const searchBoxRef = useRef(null);
   const modalRef = useRef(null);
   const sortMenuRef = useRef(null);
+
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
       event.preventDefault();
@@ -58,6 +59,7 @@ const VocabMountain = ({ user }) => {
       setNotFound(false);
       return fetchData;
     },
+    refetchOnWindowFocus: false,
   });
 
   const handleSearch = (e) => {
@@ -137,6 +139,7 @@ const VocabMountain = ({ user }) => {
     });
 
     setResult(searchResult);
+    setSearch(suggestedWord);
     setNotFound(false);
     setSuggestedWords(null);
   };
@@ -147,12 +150,13 @@ const VocabMountain = ({ user }) => {
 
   return (
     <main>
-      <div className="flex flex-col gap-4 mx-4 my-10">
-        <div className="text-center lg:text-start">
+      <div className="flex flex-col gap-4 ml-4 my-10">
+        <header className="text-center lg:text-start">
+          <h1>Vocab Mountain</h1>
           <p className="font-subHead opacity-50">
             these are the words you&apos;ve selected to learn
           </p>
-        </div>
+        </header>
         <form>
           <div className="flex gap-2 flex-row items-center">
             <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
@@ -229,16 +233,20 @@ const VocabMountain = ({ user }) => {
 
         {notFound && (
           <div>
-            <p>This word is not in your vocab mountain.</p>
+            <span className="italic">
+              {" "}
+              This word is not in your vocab mountain
+            </span>
           </div>
         )}
         {notFound && suggestedWords?.length > 0 && (
           <div className="">
-            <p>Did you mean? </p>
+            <div className="font-subHead tracking-wider">Did you mean? </div>
             <div className="flex gap-2 flex-wrap">
               {suggestedWords.map((word, index) => {
                 return (
                   <button
+                    className="mt-1 border px-4 rounded-xl dark:hover:bg-gray-700 hover:bg-slate-300"
                     key={index}
                     onClick={() => handleSearchSuggestedWord(word)}
                   >
@@ -249,14 +257,18 @@ const VocabMountain = ({ user }) => {
             </div>
           </div>
         )}
-
-        {result?.map((vocab, index) => {
-          return (
-            <section key={index} className="">
-              <DefinitionGroup vocab={vocab} />
-            </section>
-          );
-        })}
+        <article className="vocab flex flex-col gap-4">
+          {result?.map((vocab, index) => {
+            return (
+              <section
+                key={index}
+                className="word w-4/5 lg:w-1/2 rounded-lg border border-slate-300 dark:border-slate-700"
+              >
+                <DefinitionGroup vocab={vocab} />
+              </section>
+            );
+          })}
+        </article>
       </div>
     </main>
   );
