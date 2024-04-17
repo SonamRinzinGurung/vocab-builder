@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import WordMeaningGroup from "./WordMeaningGroup";
 import PropTypes from "prop-types";
 import MenuModal from "./MenuModal";
@@ -15,6 +15,7 @@ const DefinitionGroup = ({ vocab }) => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
+  const ref = useRef(null);
   const optionRef = useRef(null);
   const queryClient = useQueryClient();
   const { playing, playPause, url } = useAudio(vocab?.phonetics);
@@ -32,15 +33,28 @@ const DefinitionGroup = ({ vocab }) => {
     },
   });
 
+  useEffect(() => {
+    const refInstance = ref.current;
+
+    function listenExceptModal(event) {
+      if (!modalRef?.current.contains(event.target)) {
+        setOpen((prev) => !prev);
+      }
+    }
+    refInstance.addEventListener("mousedown", listenExceptModal);
+
+    return () => {
+      refInstance.removeEventListener("mousedown", listenExceptModal);
+    };
+  }, []);
+
   return (
-    <>
-      <div className="w-1/2 md:w-1/6 flex justify-between items-center">
-        <div
-          className="font-bold cursor-pointer"
-          onClick={() => setOpen(!open)}
-        >
-          {vocab?.word}
-        </div>
+    <div className="w-full">
+      <div
+        ref={ref}
+        className="flex justify-between items-center cursor-pointer p-2 rounded-lg bg-slate-200 dark:bg-slate-800 pl-4"
+      >
+        <div className="font-subHead text-xl tracking-wide">{vocab?.word}</div>
         <div
           ref={modalRef}
           className="relative"
@@ -52,7 +66,7 @@ const DefinitionGroup = ({ vocab }) => {
           </div>
           {modal && (
             <MenuModal
-              className={"z-50 w-24 lg:w-40 top-6"}
+              className={"z-50 w-24 lg:w-40 top-4 left-1"}
               modalRef={modalRef}
               setModal={setModal}
             >
@@ -66,8 +80,9 @@ const DefinitionGroup = ({ vocab }) => {
           )}
         </div>
       </div>
+
       {open && (
-        <div className="flex gap-2 items-center">
+        <div className="phonetics flex gap-2 items-center p-2">
           <div className="text-sm">{vocab?.phonetic}</div>
           {url && (
             <button onClick={playPause}>
@@ -80,8 +95,8 @@ const DefinitionGroup = ({ vocab }) => {
         <>
           {vocab?.meanings.map((meaning, index) => {
             return (
-              <div key={index}>
-                <div>{meaning.partOfSpeech}</div>
+              <div key={index} className="definition p-2">
+                <div className="italic opacity-85">{meaning.partOfSpeech}</div>
 
                 <WordMeaningGroup meaning={meaning} />
               </div>
@@ -89,7 +104,7 @@ const DefinitionGroup = ({ vocab }) => {
           })}
         </>
       )}
-    </>
+    </div>
   );
 };
 

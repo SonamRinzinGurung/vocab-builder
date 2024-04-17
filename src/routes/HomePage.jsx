@@ -147,6 +147,7 @@ const HomePage = ({ user }) => {
     <main className="mx-4 my-10">
       <div className="flex flex-col gap-4 ">
         <header className="text-center lg:text-start">
+          <h1>Vocab Builder</h1>
           <p className="font-subHead opacity-50">
             search for the new word you&apos;ve learned
           </p>
