@@ -46,6 +46,7 @@ const VocabMountain = ({ user }) => {
       const q = query(
         collection(db, "vocab"),
         where("uid", "==", user.uid),
+        where("group", "==", "vocab-mountain"),
         orderBy("timestamp", dateSort)
       );
 
@@ -150,14 +151,14 @@ const VocabMountain = ({ user }) => {
 
   return (
     <main>
-      <div className="flex flex-col gap-4 ml-4 my-10">
+      <div className="flex flex-col gap-4 lg:ml-8 my-10">
         <header className="text-center lg:text-start">
           <h1>Vocab Mountain</h1>
           <p className="font-subHead opacity-50">
             these are the words you&apos;ve selected to learn
           </p>
         </header>
-        <form>
+        <form className="mx-auto lg:mx-0">
           <div className="flex gap-2 flex-row items-center">
             <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
               <input
@@ -232,7 +233,7 @@ const VocabMountain = ({ user }) => {
         </form>
 
         {notFound && (
-          <div>
+          <div className="mx-auto lg:mx-0">
             <span className="italic">
               {" "}
               This word is not in your vocab mountain
@@ -240,9 +241,9 @@ const VocabMountain = ({ user }) => {
           </div>
         )}
         {notFound && suggestedWords?.length > 0 && (
-          <div className="">
+          <div className="mx-auto lg:mx-0">
             <div className="font-subHead tracking-wider">Did you mean? </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap justify-center lg:justify-start">
               {suggestedWords.map((word, index) => {
                 return (
                   <button
@@ -257,14 +258,14 @@ const VocabMountain = ({ user }) => {
             </div>
           </div>
         )}
-        <article className="vocab flex flex-col gap-4">
+        <article className="vocab flex flex-col gap-4 items-center lg:items-start">
           {result?.map((vocab, index) => {
             return (
               <section
                 key={index}
                 className="word w-4/5 lg:w-1/2 rounded-lg border border-slate-300 dark:border-slate-700"
               >
-                <DefinitionGroup vocab={vocab} />
+                <DefinitionGroup vocab={vocab} source="vocab-mountain" />
               </section>
             );
           })}

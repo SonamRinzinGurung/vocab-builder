@@ -10,8 +10,9 @@ import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ToolTip from "./ToolTip";
+import useWindowSize from "../hooks/useWindowSize";
 
-const DefinitionGroup = ({ vocab }) => {
+const DefinitionGroup = ({ vocab, source }) => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
@@ -19,13 +20,14 @@ const DefinitionGroup = ({ vocab }) => {
   const optionRef = useRef(null);
   const queryClient = useQueryClient();
   const { playing, playPause, url } = useAudio(vocab?.phonetics);
+  const { isMobile } = useWindowSize();
 
   const { mutate: removeWord } = useMutation({
     mutationFn: async (id) => {
       await deleteDoc(doc(db, "vocab", id));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("vocab-mountain");
+      queryClient.invalidateQueries(source);
       toast.success("Word removed from vocab mountain.");
     },
     onError: () => {
@@ -66,7 +68,7 @@ const DefinitionGroup = ({ vocab }) => {
           </div>
           {modal && (
             <MenuModal
-              className={"z-50 w-24 lg:w-40 top-4 left-1"}
+              className={`z-50 w-24 lg:w-40 top-4 ${isMobile ? "right-1" : "left-1"}`}
               modalRef={modalRef}
               setModal={setModal}
             >
@@ -110,6 +112,7 @@ const DefinitionGroup = ({ vocab }) => {
 
 DefinitionGroup.propTypes = {
   vocab: PropTypes.object.isRequired,
+  source: PropTypes.string.isRequired,
 };
 
 export default DefinitionGroup;

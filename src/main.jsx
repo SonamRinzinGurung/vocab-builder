@@ -9,6 +9,7 @@ const HomePage = lazy(() => import("./routes/HomePage"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const VocabMountain = lazy(() => import("./routes/VocabMountain"));
 const Root = lazy(() => import("./components/Root"));
+const VocabValley = lazy(() => import("./routes/VocabValley"));
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import VerifyNotice from "./routes/VerifyNotice";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <VocabMountain />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/vocab-valley",
+        element: (
+          <ProtectedRoute>
+            <VocabValley />
           </ProtectedRoute>
         ),
       },

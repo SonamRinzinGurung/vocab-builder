@@ -90,6 +90,7 @@ const HomePage = ({ user }) => {
         ...definition,
         uid: user.uid,
         timestamp: serverTimestamp(),
+        group: "vocab-mountain"
       });
     },
     onSuccess: () => {
