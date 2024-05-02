@@ -100,6 +100,13 @@ const NavBar = () => {
                 >
                   <span className="font-subHead text-xl">Vocab Mountain</span>
                 </Link>
+                <Link
+                  onClick={toggleMenu}
+                  to={"/vocab-valley"}
+                  className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
+                >
+                  <span className="font-subHead text-xl">Vocab Valley</span>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full pl-8 py-4  text-gray-100 hover:bg-[#f8f0f0] hover:text-red-700 border-b-2 text-left"
@@ -134,6 +141,12 @@ const NavBar = () => {
                 className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
               >
                 Vocab
+              </Link>
+              <Link
+                to="/vocab-valley"
+                className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
+              >
+                Valley
               </Link>
               <button
                 className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
