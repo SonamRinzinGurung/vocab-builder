@@ -155,7 +155,7 @@ const VocabMountain = ({ user }) => {
         <header className="text-center lg:text-start">
           <h1>Vocab Mountain</h1>
           <p className="font-subHead opacity-50">
-            these are the words you&apos;ve selected to learn
+            these are the words you&apos;ve chosen to master
           </p>
         </header>
         <form className="mx-auto lg:mx-0">

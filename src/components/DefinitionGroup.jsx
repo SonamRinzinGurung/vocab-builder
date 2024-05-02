@@ -3,7 +3,7 @@ import WordMeaningGroup from "./WordMeaningGroup";
 import PropTypes from "prop-types";
 import MenuModal from "./MenuModal";
 import { BsThreeDots } from "react-icons/bs";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import useAudio from "../hooks/useAudio";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
@@ -28,13 +28,28 @@ const DefinitionGroup = ({ vocab, source }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(source);
-      toast.success("Word removed from vocab mountain.");
+      toast.success("Word removed from vocab list.");
     },
     onError: () => {
       toast.error("Error occurred!");
     },
   });
 
+  const { mutate: moveWord } = useMutation({
+    mutationFn: async (id) => {
+      const docRef = doc(db, "vocab", id);
+      await updateDoc(docRef, { group: source === "vocab-mountain" ? "vocab-valley" : "vocab-mountain" })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(source);
+      const message = source === "vocab-mountain" ? "vocab valley" : "vocab mountain";
+      toast.success(`Word moved successfully to ${message}`);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error occurred!");
+    }
+  })
   useEffect(() => { // listen for clicks on the word to open/close the definition group but not the option icon to open/close the modal
     const refInstance = ref.current;
 
@@ -72,15 +87,16 @@ const DefinitionGroup = ({ vocab, source }) => {
               modalRef={modalRef}
               setModal={setModal}
             >
-              <button className="rounded-sm hover:text-blue-500 border-gray-200 dark:border-gray-700">
-                {source}
+              <button onClick={() => moveWord(vocab?.id)} className="rounded-sm hover:text-blue-500 border-gray-200 dark:border-gray-700">
+                {source === "vocab-mountain" && "vocab valley"}
+                {source === "vocab-valley" && "vocab mountain"}
               </button>
               <hr className="w-10/12 mx-auto" />
               <button
                 onClick={() => removeWord(vocab?.id)}
                 className="rounded-sm hover:text-red-500 border-gray-200 dark:border-gray-700"
               >
-                Remove
+                remove
               </button>
             </MenuModal>
           )}

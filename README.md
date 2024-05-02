@@ -15,12 +15,12 @@ This app allows you to search for the meaning of words, listen to the pronunciat
 - TailwindCSS
 
 ## Features
-- Search for the meaning of words
+- Search for the full definition of words
 - Get suggestions for the closest match on incorrect spelling
-- Listen to the pronunciation
-- Add words to your personal dictionary
+- Listen to the pronunciation of words
+- Add words to your personal vocab dictionary
 - Sort words in your dictionary by date added or alphabetically
-- Move words to Vocab Valley
+- Move words that you have mastered to the Vocab Valley for future reference
 - Delete words from your dictionary
 - Responsive design
 - Dark mode
