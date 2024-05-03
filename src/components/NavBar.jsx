@@ -6,7 +6,6 @@ import useAuth from "../hooks/useAuth";
 import { ToastContainer, Slide } from "react-toastify";
 import { CiLight, CiDark, CiLogout } from "react-icons/ci";
 import ToolTip from "./ToolTip";
-import useWindowSize from "../hooks/useWindowSize";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -14,7 +13,6 @@ const NavBar = () => {
   const darkModeBtnRef = useRef(null);
   const logoutBtnRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isMobile } = useWindowSize();
   const { user, isLoading } = useAuth();
 
   let darkModeLocal = localStorage.getItem("darkMode");
@@ -87,7 +85,7 @@ const NavBar = () => {
                   <div className="font-bold text-2xl">x</div>
                 </button>
               </div>
-              <div className="modal-body relative flex flex-col h-3/4 items-center mt-5">
+              <div className="mobile-nav-links relative flex flex-col h-3/4 items-center mt-5">
                 <Link
                   onClick={toggleMenu}
                   to={"/"}
@@ -129,7 +127,7 @@ const NavBar = () => {
             </div>
           </Link>
         </div>
-        <div className="flex flex-col md:flex-row font-mono text-lg tracking-wide">
+        <div className="nav-links flex flex-col md:flex-row font-mono text-lg tracking-wide">
           {user && user.emailVerified && (
             <>
               <Link
@@ -160,35 +158,30 @@ const NavBar = () => {
           )}
         </div>
       </div>
-      {user && user.emailVerified && (
-        <div
-          className="relative ml-auto mr-6 hidden lg:block py-3"
-        >
-          <button
-            ref={logoutBtnRef}
-            onClick={handleLogout}
-          >
 
-            <CiLogout
-              size={30}
-            />
+      <div className="flex items-center mr-4 py-3 ml-auto">
+        {user && user.emailVerified && (
+          <div className="relative ml-auto mr-6 hidden lg:block">
+            <button ref={logoutBtnRef} onClick={handleLogout}>
+              <CiLogout size={30} />
+              <ToolTip
+                text="logout"
+                contentRef={logoutBtnRef}
+                position="left"
+              />
+            </button>
+          </div>
+        )}
+        <div className="relative">
+          <button onClick={toggleDarkMode} ref={darkModeBtnRef}>
+            {darkMode ? <CiLight size="30" /> : <CiDark size="30" />}
             <ToolTip
-              text="logout"
-              contentRef={logoutBtnRef}
+              text={darkMode ? "switch to light" : "switch to dark"}
+              contentRef={darkModeBtnRef}
               position="left"
             />
           </button>
-        </div>)}
-
-      <div className={`relative pr-4 py-3 ${!user?.emailVerified ? "ml-auto" : ""} ${!user ? "ml-auto" : ""} ${isMobile ? "ml-auto" : ""}`}>
-        <button onClick={toggleDarkMode} ref={darkModeBtnRef}>
-          {darkMode ? <CiLight size="30" /> : <CiDark size="30" />}
-          <ToolTip
-            text={darkMode ? "switch to light" : "switch to dark"}
-            contentRef={darkModeBtnRef}
-            position="left"
-          />
-        </button>
+        </div>
       </div>
 
       <ToastContainer

@@ -269,6 +269,11 @@ const VocabValley = ({ user }) => {
                             </section>
                         );
                     })}
+                    {!notFound && result?.length === 0 && (
+                        <div className="mx-auto lg:mx-0">
+                            <span className="italic">Your Vocab Valley is Empty</span>
+                        </div>
+                    )}
                 </article>
             </div>
         </main>

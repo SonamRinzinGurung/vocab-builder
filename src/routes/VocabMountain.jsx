@@ -269,6 +269,11 @@ const VocabMountain = ({ user }) => {
               </section>
             );
           })}
+          {!notFound && result?.length === 0 && (
+            <div className="mx-auto lg:mx-0">
+              <span className="italic">Your Vocab Mountain is Empty</span>
+            </div>
+          )}
         </article>
       </div>
     </main>
