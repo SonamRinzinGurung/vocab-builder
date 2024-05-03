@@ -27,7 +27,7 @@ This app allows you to search for the meaning of words, listen to the pronunciat
 - Firebase User authentication
 
 ***
-<img width="600" alt="image" src="https://github.com/SonamRinzinGurung/vocab-builder/assets/100353887/079d9d49-59f7-4d26-a062-63766d9f5bc8">
+<img width="600" alt="image" src="https://res.cloudinary.com/ddr8aveca/image/upload/v1714718284/github%20storage/hvqqhvhmcmmepi7zf2xl.png">
 
 ***
 

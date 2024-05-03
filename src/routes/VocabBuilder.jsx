@@ -22,7 +22,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { IoIosSearch } from "react-icons/io";
 import ToolTip from "../components/ToolTip";
 
-const HomePage = ({ user }) => {
+const VocabBuilder = ({ user }) => {
   useSetTitle("Vocab Builder");
 
   const [search, setSearch] = useState("");
@@ -137,7 +137,7 @@ const HomePage = ({ user }) => {
     );
 
     if (isDuplicate) {
-      toast.error("Word already exists in the vocab mountain.");
+      toast.error("Word already exists in the vocab list.");
       return;
     }
 
@@ -145,7 +145,7 @@ const HomePage = ({ user }) => {
   };
 
   return (
-    <main className="mx-4 my-10">
+    <main className="ml-4 lg:ml-8 my-10">
       <div className="flex flex-col gap-4 ">
         <header className="text-center lg:text-start">
           <h1>Vocab Builder</h1>
@@ -202,9 +202,9 @@ const HomePage = ({ user }) => {
                 <div className="text-sm">{definition?.phonetic}</div>
                 {url && (
                   <button onClick={playPause} className="w-fit h-fit self-end">
-                  {playing ? <CiPause1 /> : <CiPlay1 />}
-                </button>
-              )}
+                    {playing ? <CiPause1 /> : <CiPlay1 />}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -245,8 +245,8 @@ const HomePage = ({ user }) => {
   );
 };
 
-HomePage.propTypes = {
+VocabBuilder.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-export default HomePage;
+export default VocabBuilder;

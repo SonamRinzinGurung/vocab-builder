@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.min.css";
 const SignUp = lazy(() => import("./routes/SignUp"));
 const Login = lazy(() => import("./routes/Login"));
-const HomePage = lazy(() => import("./routes/HomePage"));
+const VocabBuilder = lazy(() => import("./routes/VocabBuilder"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const VocabMountain = lazy(() => import("./routes/VocabMountain"));
 const Root = lazy(() => import("./components/Root"));
@@ -26,15 +26,15 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <ProtectedRoute>
-            <HomePage />
+            <VocabMountain />
           </ProtectedRoute>
         ),
       },
       {
-        path: "/vocab-mountain",
+        path: "/vocab-builder",
         element: (
           <ProtectedRoute>
-            <VocabMountain />
+            <VocabBuilder />
           </ProtectedRoute>
         ),
       },

@@ -4,15 +4,17 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
 import { ToastContainer, Slide } from "react-toastify";
-import { CiLight, CiDark } from "react-icons/ci";
+import { CiLight, CiDark, CiLogout } from "react-icons/ci";
 import ToolTip from "./ToolTip";
+import useWindowSize from "../hooks/useWindowSize";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const modalRef = useRef(null);
   const darkModeBtnRef = useRef(null);
+  const logoutBtnRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const { isMobile } = useWindowSize();
   const { user, isLoading } = useAuth();
 
   let darkModeLocal = localStorage.getItem("darkMode");
@@ -91,14 +93,14 @@ const NavBar = () => {
                   to={"/"}
                   className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
                 >
-                  <span className="font-subHead text-xl">Home</span>
+                  <span className="font-subHead text-xl">Vocab Mountain</span>
                 </Link>
                 <Link
                   onClick={toggleMenu}
-                  to={"/vocab-mountain"}
+                  to={"/vocab-builder"}
                   className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
                 >
-                  <span className="font-subHead text-xl">Vocab Mountain</span>
+                  <span className="font-subHead text-xl">Vocab Builder</span>
                 </Link>
                 <Link
                   onClick={toggleMenu}
@@ -137,10 +139,10 @@ const NavBar = () => {
                 Home
               </Link>
               <Link
-                to="/vocab-mountain"
+                to="/vocab-builder"
                 className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
               >
-                Vocab
+                Builder
               </Link>
               <Link
                 to="/vocab-valley"
@@ -148,12 +150,7 @@ const NavBar = () => {
               >
                 Valley
               </Link>
-              <button
-                className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
+
               <button onClick={toggleMenu}>
                 <div className="p-4 hover:bg-primary hover:text-gray-100 lg:hidden">
                   Menu
@@ -163,8 +160,27 @@ const NavBar = () => {
           )}
         </div>
       </div>
+      {user && user.emailVerified && (
+        <div
+          className="relative ml-auto mr-6 hidden lg:block py-3"
+        >
+          <button
+            ref={logoutBtnRef}
+            onClick={handleLogout}
+          >
 
-      <div className="relative ml-auto mt-1 pr-4">
+            <CiLogout
+              size={30}
+            />
+            <ToolTip
+              text="logout"
+              contentRef={logoutBtnRef}
+              position="left"
+            />
+          </button>
+        </div>)}
+
+      <div className={`relative pr-4 py-3 ${!user?.emailVerified ? "ml-auto" : ""} ${!user ? "ml-auto" : ""} ${isMobile ? "ml-auto" : ""}`}>
         <button onClick={toggleDarkMode} ref={darkModeBtnRef}>
           {darkMode ? <CiLight size="30" /> : <CiDark size="30" />}
           <ToolTip
