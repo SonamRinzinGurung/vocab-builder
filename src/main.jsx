@@ -26,15 +26,15 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <ProtectedRoute>
-            <VocabMountain />
+            <VocabBuilder />
           </ProtectedRoute>
         ),
       },
       {
-        path: "/vocab-builder",
+        path: "/vocab-mountain",
         element: (
           <ProtectedRoute>
-            <VocabBuilder />
+            <VocabMountain />
           </ProtectedRoute>
         ),
       },

@@ -91,14 +91,14 @@ const NavBar = () => {
                   to={"/"}
                   className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
                 >
-                  <span className="font-subHead text-xl">Vocab Mountain</span>
+                  <span className="font-subHead text-xl">Vocab Builder</span>
                 </Link>
                 <Link
                   onClick={toggleMenu}
-                  to={"/vocab-builder"}
+                  to={"/vocab-mountain"}
                   className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
                 >
-                  <span className="font-subHead text-xl">Vocab Builder</span>
+                  <span className="font-subHead text-xl">Vocab Mountain</span>
                 </Link>
                 <Link
                   onClick={toggleMenu}
@@ -128,7 +128,7 @@ const NavBar = () => {
           </Link>
         </div>
         <div className="nav-links flex flex-col md:flex-row font-mono text-lg tracking-wide">
-          {user && user.emailVerified && (
+          {user?.emailVerified && (
             <>
               <Link
                 to="/"
@@ -137,10 +137,10 @@ const NavBar = () => {
                 Home
               </Link>
               <Link
-                to="/vocab-builder"
+                to="/vocab-mountain"
                 className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
               >
-                Builder
+                Mountain
               </Link>
               <Link
                 to="/vocab-valley"
@@ -160,7 +160,7 @@ const NavBar = () => {
       </div>
 
       <div className="flex items-center mr-4 py-3 ml-auto">
-        {user && user.emailVerified && (
+        {user?.emailVerified && (
           <div className="relative ml-auto mr-6 hidden lg:block">
             <button ref={logoutBtnRef} onClick={handleLogout}>
               <CiLogout size={30} />

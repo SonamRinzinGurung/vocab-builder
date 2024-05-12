@@ -25,26 +25,29 @@ import ToolTip from "../components/ToolTip";
 const VocabBuilder = ({ user }) => {
   useSetTitle("Vocab Builder");
 
-  const [search, setSearch] = useState("");
-  const [definition, setDefinition] = useState(null);
-  const [notFound, setNotFound] = useState(false);
-  const [wordAddStatus, setWordAddStatus] = useState(false);
-  const [result, setResult] = useState(null);
-  const [suggestedWords, setSuggestedWords] = useState(null);
+  const [search, setSearch] = useState(""); // search query
+  const [definition, setDefinition] = useState(null); // word definition
+  const [notFound, setNotFound] = useState(false); // word not found status
+  const [wordAddStatus, setWordAddStatus] = useState(false); // status of the word add button
+  const [result, setResult] = useState(null); // all words in the vocab list
+  const [suggestedWords, setSuggestedWords] = useState(null); // suggested words for the misspelled word
+  const [isLoading, setIsLoading] = useState(false); // loading status
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
   const addBtnRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   useKeyPress("/", (event) => {
+    // focus on search box when / is pressed
     if (document.activeElement !== searchBoxRef.current) {
       event.preventDefault();
       searchBoxRef.current.focus();
     }
   });
 
+  // play audio for the phonetics
   const { playing, playPause, url } = useAudio(definition?.phonetics);
 
+  // fetch all the words in the vocab list
   useQuery({
     queryKey: ["vocab-all"],
     queryFn: async () => {
@@ -60,6 +63,7 @@ const VocabBuilder = ({ user }) => {
     },
   });
 
+  // search for the word
   const { mutate: searchWord } = useMutation({
     mutationFn: async (search) => {
       setIsLoading(true);
@@ -71,7 +75,7 @@ const VocabBuilder = ({ user }) => {
       setIsLoading(false);
       setNotFound(false);
       setDefinition(data[0]);
-      setWordAddStatus(false);
+      setWordAddStatus(true);
       setSuggestedWords(null);
     },
     onError: () => {
@@ -83,6 +87,7 @@ const VocabBuilder = ({ user }) => {
     },
   });
 
+  // mutation to add the word to the vocab list
   const { mutate: addDefinition } = useMutation({
     mutationFn: async () => {
       setIsLoading(true);
@@ -90,12 +95,12 @@ const VocabBuilder = ({ user }) => {
         ...definition,
         uid: user.uid,
         timestamp: serverTimestamp(),
-        group: "vocab-mountain"
+        group: "vocab-mountain",
       });
     },
     onSuccess: () => {
       setIsLoading(false);
-      setWordAddStatus(true);
+      setWordAddStatus(false);
       toast.success("Word and its definition successfully added.");
       queryClient.invalidateQueries("vocab-all");
     },
@@ -124,6 +129,7 @@ const VocabBuilder = ({ user }) => {
     setSearch(word);
   };
 
+  // form submission to add the word to the vocab list
   const handleAddDefinition = async (e) => {
     e.preventDefault();
 
@@ -161,7 +167,10 @@ const VocabBuilder = ({ user }) => {
                 className="bg:white dark:bg-gray-800 outline-none"
                 type="text"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setWordAddStatus(false);
+                }}
                 name="search"
                 placeholder="Search"
               />
@@ -180,7 +189,7 @@ const VocabBuilder = ({ user }) => {
               </button>
             </div>
 
-            {definition && !wordAddStatus && !isLoading && (
+            {definition && wordAddStatus && !isLoading && (
               <button
                 className="relative px-4 lg:self-stretch rounded-sm bg-primary text-gray-100 w-fit"
                 onClick={handleAddDefinition}
@@ -196,7 +205,9 @@ const VocabBuilder = ({ user }) => {
         <article className="mt-4">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1 ">
-              <div className="font-subHead text-3xl tracking-wide">{definition?.word}</div>
+              <div className="font-subHead text-3xl tracking-wide">
+                {definition?.word}
+              </div>
 
               <div className="flex gap-2">
                 <div className="text-sm">{definition?.phonetic}</div>
@@ -211,7 +222,9 @@ const VocabBuilder = ({ user }) => {
             {definition?.meanings.map((meaning, index) => {
               return (
                 <div key={index}>
-                  <div className="italic opacity-85">{meaning.partOfSpeech}</div>
+                  <div className="italic opacity-85">
+                    {meaning.partOfSpeech}
+                  </div>
 
                   <WordMeaningGroup meaning={meaning} />
                 </div>
@@ -226,11 +239,17 @@ const VocabBuilder = ({ user }) => {
 
             {notFound && suggestedWords?.length > 0 && (
               <div className="">
-                <div className="font-subHead tracking-wider">Did you mean? </div>
+                <div className="font-subHead tracking-wider">
+                  Did you mean?{" "}
+                </div>
                 <div className="flex gap-4 flex-wrap">
                   {suggestedWords.map((word, i) => {
                     return (
-                      <button className="mt-1 border px-4 rounded-xl dark:hover:bg-gray-700 hover:bg-slate-300" onClick={() => searchSuggestedWord(word)} key={i}>
+                      <button
+                        className="mt-1 border px-4 rounded-xl dark:hover:bg-gray-700 hover:bg-slate-300"
+                        onClick={() => searchSuggestedWord(word)}
+                        key={i}
+                      >
                         {word}
                       </button>
                     );
