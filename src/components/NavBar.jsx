@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
@@ -9,16 +9,17 @@ import ToolTip from "./ToolTip";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const { user, isLoading } = useAuth(); // custom hook to get the user and loading state
+  const [menuOpen, setMenuOpen] = useState(false); // state to toggle the mobile menu
   const modalRef = useRef(null);
   const darkModeBtnRef = useRef(null);
   const logoutBtnRef = useRef(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { user, isLoading } = useAuth();
 
   let darkModeLocal = localStorage.getItem("darkMode");
   darkModeLocal = darkModeLocal?.toLowerCase() === "true";
 
-  const [darkMode, setDarkMode] = useState(darkModeLocal || false);
+  const [darkMode, setDarkMode] = useState(darkModeLocal || false); // state to toggle dark mode
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -35,6 +36,8 @@ const NavBar = () => {
     setDarkMode((prev) => !prev);
     localStorage.setItem("darkMode", !darkMode);
   };
+
+  // set the dark mode class on the html
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -47,6 +50,7 @@ const NavBar = () => {
     setMenuOpen((prev) => !prev);
   }, [setMenuOpen]);
 
+  // close the mobile menu when clicked outside the menu
   useEffect(() => {
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -86,27 +90,36 @@ const NavBar = () => {
                 </button>
               </div>
               <div className="mobile-nav-links relative flex flex-col h-3/4 items-center mt-5">
-                <Link
+                <NavLink
                   onClick={toggleMenu}
                   to={"/"}
-                  className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
+                  className={({ isActive }) =>
+                    `w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2 ${isActive ? "text-gray-100 bg-primary" : ""
+                    }`
+                  }
                 >
                   <span className="font-subHead text-xl">Vocab Builder</span>
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   onClick={toggleMenu}
                   to={"/vocab-mountain"}
-                  className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
+                  className={({ isActive }) =>
+                    `w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2 ${isActive ? "text-gray-100 bg-primary" : ""
+                    }`
+                  }
                 >
                   <span className="font-subHead text-xl">Vocab Mountain</span>
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   onClick={toggleMenu}
                   to={"/vocab-valley"}
-                  className="w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2"
+                  className={({ isActive }) =>
+                    `w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2 ${isActive ? "text-gray-100 bg-primary" : ""
+                    }`
+                  }
                 >
                   <span className="font-subHead text-xl">Vocab Valley</span>
-                </Link>
+                </NavLink>
                 <button
                   onClick={handleLogout}
                   className="w-full pl-8 py-4  text-gray-100 hover:bg-[#f8f0f0] hover:text-red-700 border-b-2 text-left"
@@ -130,24 +143,33 @@ const NavBar = () => {
         <div className="nav-links flex flex-col md:flex-row font-mono text-lg tracking-wide">
           {user?.emailVerified && (
             <>
-              <Link
+              <NavLink
                 to="/"
-                className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
+                className={({ isActive }) =>
+                  `p-4 hover:bg-primary hover:text-gray-100 hidden lg:block ${isActive ? "text-gray-100 bg-primary" : ""
+                  }`
+                }
               >
                 Home
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/vocab-mountain"
-                className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
+                className={({ isActive }) =>
+                  `p-4 hover:bg-primary hover:text-gray-100 hidden lg:block ${isActive ? "text-gray-100 bg-primary" : ""
+                  }`
+                }
               >
                 Mountain
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/vocab-valley"
-                className="p-4 hover:bg-primary hover:text-gray-100 hidden lg:block"
+                className={({ isActive }) =>
+                  `p-4 hover:bg-primary hover:text-gray-100 hidden lg:block ${isActive ? "text-gray-100 bg-primary" : ""
+                  }`
+                }
               >
                 Valley
-              </Link>
+              </NavLink>
 
               <button onClick={toggleMenu}>
                 <div className="p-4 hover:bg-primary hover:text-gray-100 lg:hidden">
@@ -159,7 +181,7 @@ const NavBar = () => {
         </div>
       </div>
 
-      <div className="flex items-center mr-4 py-3 ml-auto">
+      <div className="flex items-center mr-4 py-1 ml-auto">
         {user?.emailVerified && (
           <div className="relative ml-auto mr-6 hidden lg:block">
             <button ref={logoutBtnRef} onClick={handleLogout}>
