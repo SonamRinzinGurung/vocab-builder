@@ -16,13 +16,13 @@ import { FaSortAmountDown } from "react-icons/fa";
 
 const VocabValley = ({ user }) => {
     useSetTitle("Vocab Valley");
-    const [search, setSearch] = useState("");
-    const [result, setResult] = useState(null);
-    const [isSorted, setIsSorted] = useState(false);
-    const [dateSort, setDateSort] = useState("desc");
-    const [suggestedWords, setSuggestedWords] = useState(null);
-    const [notFound, setNotFound] = useState(false);
-    const [modal, setModal] = useState(false);
+    const [search, setSearch] = useState(""); // search state for the search input
+    const [result, setResult] = useState(null); // stores all the search results or the fetched data
+    const [isSorted, setIsSorted] = useState(false); // state to toggle alphabetic sort
+    const [dateSort, setDateSort] = useState("desc"); // state to toggle date sort
+    const [suggestedWords, setSuggestedWords] = useState(null); // state to store suggested words
+    const [notFound, setNotFound] = useState(false); // state to toggle the not found message
+    const [modal, setModal] = useState(false); // state to toggle the sort menu
     const searchBoxRef = useRef(null);
     const modalRef = useRef(null);
     const sortMenuRef = useRef(null);
@@ -77,6 +77,7 @@ const VocabValley = ({ user }) => {
         setResult(searchResult);
         setNotFound(false);
 
+        // if no search result found, suggest words
         if (searchResult.length === 0) {
             const options = {
                 keys: ["word"],
@@ -115,7 +116,7 @@ const VocabValley = ({ user }) => {
 
     const handleDateSort = (e) => {
         e.preventDefault();
-        setIsSorted(false); // rest alphabetic sort
+        setIsSorted(false); // reset alphabetic sort
 
         if (dateSort === "desc") {
             setDateSort("asc");

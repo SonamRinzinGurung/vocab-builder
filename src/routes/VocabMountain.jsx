@@ -16,17 +16,19 @@ import { FaSortAmountDown } from "react-icons/fa";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
-  const [search, setSearch] = useState("");
-  const [result, setResult] = useState(null);
-  const [isSorted, setIsSorted] = useState(false);
-  const [dateSort, setDateSort] = useState("desc");
-  const [suggestedWords, setSuggestedWords] = useState(null);
-  const [notFound, setNotFound] = useState(false);
-  const [modal, setModal] = useState(false);
+
+  const [search, setSearch] = useState(""); // search state for the search input
+  const [result, setResult] = useState(null); // stores all the search results or the fetched data
+  const [isSorted, setIsSorted] = useState(false); // state to toggle alphabetic sort
+  const [dateSort, setDateSort] = useState("desc"); // state to toggle date sort
+  const [suggestedWords, setSuggestedWords] = useState(null); // state to store suggested words
+  const [notFound, setNotFound] = useState(false); // state to toggle the not found message
+  const [modal, setModal] = useState(false); // state to toggle the sort menu
   const searchBoxRef = useRef(null);
   const modalRef = useRef(null);
   const sortMenuRef = useRef(null);
 
+  // listen for the "/" key press to focus on the search input
   useKeyPress("/", (event) => {
     if (document.activeElement !== searchBoxRef.current) {
       event.preventDefault();
@@ -77,6 +79,7 @@ const VocabMountain = ({ user }) => {
     setResult(searchResult);
     setNotFound(false);
 
+    // if no search result, suggest words using Fuse.js
     if (searchResult.length === 0) {
       const options = {
         keys: ["word"],
@@ -85,7 +88,7 @@ const VocabMountain = ({ user }) => {
       const fuse = new Fuse(data, options);
       const result = fuse.search(search);
       const suggestedWords = result?.map((i) => i?.item?.word);
-      setSuggestedWords(suggestedWords);
+      setSuggestedWords(suggestedWords); // set suggested words
       setNotFound(true);
     }
   };
@@ -115,7 +118,7 @@ const VocabMountain = ({ user }) => {
 
   const handleDateSort = (e) => {
     e.preventDefault();
-    setIsSorted(false); // rest alphabetic sort
+    setIsSorted(false); // reset alphabetic sort
 
     if (dateSort === "desc") {
       setDateSort("asc");
