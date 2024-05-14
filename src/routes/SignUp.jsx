@@ -3,12 +3,14 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { auth, googleProvider } from "../firebase-config";
 import useAuth from "../hooks/useAuth";
 import useSetTitle from "../hooks/useSetTitle";
 import { toast } from "react-toastify";
 import signUpImg from "../assets/bibliophile.svg";
+import GoogleAuthBtn from "../components/GoogleAuthBtn";
 
 const SignUp = () => {
   useSetTitle("SignUp");
@@ -31,6 +33,15 @@ const SignUp = () => {
     } catch (error) {
       const errMsg = error.message;
       toast.error(errMsg);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -88,9 +99,9 @@ const SignUp = () => {
                 />
               </div>
 
-              <div className="rounded-sm shadow-md bg-primary hover:shadow-lg">
+              <div className="flex justify-center rounded-sm shadow-md bg-primary hover:shadow-lg h-8">
                 <button
-                  className="w-full text-lg font-medium text-gray-100"
+                  className="text-lg font-medium text-gray-100"
                   type="submit"
                   onClick={onSubmit}
                 >
@@ -99,8 +110,9 @@ const SignUp = () => {
               </div>
             </div>
           </form>
-
-          <p>
+          <hr className="border dark:border-gray-500" />
+          <GoogleAuthBtn handleGoogleSignIn={handleGoogleSignIn} />
+          <p className="text-base lg:text-lg">
             Already have an account?{" "}
             <Link className="text-primary font-medium" to="/login">
               Sign in

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, googleProvider } from "../firebase-config";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useSetTitle from "../hooks/useSetTitle";
 import { toast } from "react-toastify";
 import loginImg from "../assets/bibliophile.svg";
+import GoogleAuthBtn from "../components/GoogleAuthBtn";
 
 const Login = () => {
   useSetTitle("Login");
@@ -25,6 +29,16 @@ const Login = () => {
       toast.error(errorMessage);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   if (isLoading) return null;
   if (user) {
     return <Navigate to={"/"} />;
@@ -79,15 +93,25 @@ const Login = () => {
                   id="password"
                 />
               </div>
-              <div className="rounded-sm shadow-md bg-primary hover:shadow-lg">
-                <button className="w-full text-lg font-medium text-gray-100" type="submit" onClick={handleSubmit}>
+              <div className="flex justify-center rounded-sm shadow-md bg-primary hover:shadow-lg h-8">
+                <button
+                  className="text-lg font-medium text-gray-100"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
                   Sign In
                 </button>
               </div>
             </div>
           </form>
-          <p>
-            Don&apos;t have an account? <Link className="text-primary font-medium" to="/signup">Sign up</Link>
+
+          <hr className="border dark:border-gray-500" />
+          <GoogleAuthBtn handleGoogleSignIn={handleGoogleSignIn} />
+          <p className="text-base lg:text-lg">
+            Don&apos;t have an account?{" "}
+            <Link className="text-primary font-medium" to="/signup">
+              Sign up
+            </Link>
           </p>
         </div>
       </section>
