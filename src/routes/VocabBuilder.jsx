@@ -191,7 +191,7 @@ const VocabBuilder = ({ user }) => {
 
             {definition && wordAddStatus && !isLoading && (
               <button
-                className="relative px-4 lg:self-stretch rounded-sm bg-primary text-gray-100 w-fit"
+                className="rounded-sm bg-primary text-gray-100 w-24 h-11 font-medium text-lg"
                 onClick={handleAddDefinition}
                 ref={addBtnRef}
               >
