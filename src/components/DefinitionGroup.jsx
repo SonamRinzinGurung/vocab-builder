@@ -83,20 +83,20 @@ const DefinitionGroup = ({ vocab, source }) => {
           </div>
           {modal && (
             <MenuModal
-              className={`z-50 w-32 lg:w-40 top-4 ${isMobile ? "right-1" : "left-1"}`}
+              className={`z-50 w-40 top-4 ${isMobile ? "right-1" : "left-1"}`}
               modalRef={modalRef}
               setModal={setModal}
             >
               <button onClick={() => moveWord(vocab?.id)} className="rounded-sm hover:text-blue-500 border-gray-200 dark:border-gray-700">
-                {source === "vocab-mountain" && "vocab valley"}
-                {source === "vocab-valley" && "vocab mountain"}
+                {source === "vocab-mountain" && "Move to vocab valley"}
+                {source === "vocab-valley" && "Move to vocab mountain"}
               </button>
               <hr className="w-10/12 mx-auto" />
               <button
                 onClick={() => removeWord(vocab?.id)}
                 className="rounded-sm hover:text-red-500 border-gray-200 dark:border-gray-700"
               >
-                remove
+                Delete word
               </button>
             </MenuModal>
           )}

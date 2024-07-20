@@ -197,7 +197,7 @@ const VocabValley = ({ user }) => {
                             </div>
                             {modal && (
                                 <MenuModal
-                                    className="w-24 lg:w-40 z-50 right-2 top-8"
+                                    className="w-32 lg:w-40 z-50 right-2 top-8"
                                     modalRef={modalRef}
                                     setModal={setModal}
                                 >
