@@ -18,9 +18,9 @@ const WordMeaningGroup = ({ meaning }) => {
         </div>
       )}
       <div className="flex flex-col">
-        <div className="cursor-pointer" onClick={() => setOpen(!open)}>
+        <div>
           <span className="text-sm opacity-85">i.</span>{" "}
-          {meaning.definitions[0].definition}
+          {meaning.definitions[0].definition} {!open && <button onClick={() => setOpen(!open)} className="cursor-pointer text-sm bg-slate-300 dark:bg-slate-700 px-1 rounded-sm">see more</button>}
         </div>
 
         {meaning?.definitions.slice(1).map((definition, i) => {
@@ -37,6 +37,9 @@ const WordMeaningGroup = ({ meaning }) => {
             </>
           );
         })}
+        {open && (
+          <button className="w-fit cursor-pointer text-sm bg-slate-300 dark:bg-slate-700 px-1 rounded-sm" onClick={() => setOpen(false)}>see less</button>
+        )}
       </div>
     </div>
   );
