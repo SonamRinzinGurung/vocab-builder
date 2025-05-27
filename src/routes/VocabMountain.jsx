@@ -3,7 +3,6 @@ import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import Fuse from "fuse.js";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import { IoIosSearch } from "react-icons/io";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { TiSortAlphabetically } from "react-icons/ti";
 import DefinitionGroup from "../components/DefinitionGroup";
@@ -13,6 +12,7 @@ import { db } from "../firebase-config";
 import useKeyPress from "../hooks/useKeyPress";
 import useSetTitle from "../hooks/useSetTitle";
 import { FaSortAmountDown } from "react-icons/fa";
+import SearchTextBox from "../components/SearchTextBox";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -148,6 +148,10 @@ const VocabMountain = ({ user }) => {
     setSuggestedWords(null);
   };
 
+  const handleClearSearch = () => {
+    setSearch("")
+  }
+
   if (error) return "An error has occurred: " + error.message;
 
   if (isPending || isQueryLoading) return null;
@@ -163,31 +167,7 @@ const VocabMountain = ({ user }) => {
         </header>
         <form className="mx-auto lg:mx-0">
           <div className="flex gap-2 flex-row items-center">
-            <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
-              <input
-                ref={searchBoxRef}
-                className="bg:white dark:bg-gray-800 outline-none"
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                name="search"
-                placeholder="Search"
-              />
-
-              <p
-                className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
-                  }`}
-              >
-                Press /
-              </p>
-              <button
-                className="cursor-pointer"
-                onClick={handleSearch}
-                type="submit"
-              >
-                <IoIosSearch size={25} />
-              </button>
-            </div>
+            <SearchTextBox searchBoxRef={searchBoxRef} search={search} setSearch={setSearch} handleClearSearch={handleClearSearch} handleSearch={handleSearch} />
             <div
               ref={modalRef}
               className="relative"

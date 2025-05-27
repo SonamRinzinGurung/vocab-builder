@@ -19,8 +19,9 @@ import { toast } from "react-toastify";
 import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
 import ClipLoader from "react-spinners/ClipLoader";
-import { IoIosSearch, IoIosBookmark, IoIosClose } from "react-icons/io";
+import { IoIosBookmark } from "react-icons/io";
 import ToolTip from "../components/ToolTip";
+import SearchTextBox from "../components/SearchTextBox";
 
 const VocabBuilder = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -174,34 +175,7 @@ const VocabBuilder = ({ user }) => {
         </header>
         <form>
           <div className="flex gap-4 flex-col lg:flex-row items-center">
-            <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-3 items-center gap-2 md:w-96 w-80 h-12">
-              <input
-                ref={searchBoxRef}
-                className="bg:white dark:bg-gray-800 outline-none"
-                type="text"
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setWordAddStatus(false);
-                }}
-                name="search"
-                placeholder="Search"
-              />
-              <p
-                className={`ml-auto text-gray-400 hidden lg:block ${search && "invisible"
-                  }`}
-              >
-                Press /
-              </p>
-              <button type="button" onClick={handleClearSearch} className={`${!search && 'hidden'}`}><IoIosClose size={30} /></button>
-              <button
-                className="cursor-pointer ml-auto"
-                onClick={handleSearch}
-                type="submit"
-              >
-                <IoIosSearch size={25} />
-              </button>
-            </div>
+            <SearchTextBox searchBoxRef={searchBoxRef} search={search} setSearch={setSearch} setWordAddStatus={setWordAddStatus} handleClearSearch={handleClearSearch} handleSearch={handleSearch} />
 
             {definition && wordAddStatus && !isLoading && (
               <button
