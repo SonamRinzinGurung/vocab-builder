@@ -18,7 +18,7 @@ const MenuModal = ({ children, className, modalRef, setModal }) => {
 
   return (
     <div className={`absolute` + ` ` + className}>
-      <div className="border bg-white flex w-full flex-col dark:bg-gray-800 dark:border-gray-500 rounded-md gap-2 py-2">
+      <div className="border bg-white flex w-full flex-col dark:bg-gray-800 dark:border-gray-500 rounded-md gap-2 p-3">
         {children}
       </div>
     </div>

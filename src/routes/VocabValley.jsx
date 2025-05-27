@@ -13,6 +13,7 @@ import useKeyPress from "../hooks/useKeyPress";
 import useSetTitle from "../hooks/useSetTitle";
 import { FaSortAmountDown } from "react-icons/fa";
 import SearchTextBox from "../components/SearchTextBox";
+import MenuItem from "../components/MenuItem";
 
 const VocabValley = ({ user }) => {
     useSetTitle("Vocab Valley");
@@ -177,35 +178,29 @@ const VocabValley = ({ user }) => {
                             </div>
                             {modal && (
                                 <MenuModal
-                                    className="w-32 lg:w-40 z-50 right-2 top-8"
+                                    className="w-32 lg:w-48 z-50 right-2 top-8"
                                     modalRef={modalRef}
                                     setModal={setModal}
                                 >
-                                    <div className="">
-                                        <div
-                                            onClick={handleSort}
-                                            className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
-                                        >
+                                    <div className="flex flex-col">
+
+                                        <MenuItem handleClick={handleSort} content={
                                             <div className="flex items-center gap-1">
+                                                <TiSortAlphabetically />
                                                 <div>{isSorted ? "UnSort" : "Sort"}</div>
-                                                {!isSorted && <TiSortAlphabetically />}
                                             </div>
-                                        </div>
-                                        <div
-                                            onClick={handleDateSort}
-                                            className="hover:bg-primary hover:text-gray-100 rounded-sm flex justify-center m-1 p-1 cursor-pointer"
-                                        >
-                                            <div className="flex items-center">
-                                                <div>Date</div>
-                                                <div>
-                                                    {dateSort === "desc" ? (
-                                                        <IoArrowUp />
-                                                    ) : (
-                                                        <IoArrowDown />
-                                                    )}
-                                                </div>
+                                        } />
+                                        <MenuItem handleClick={handleDateSort} content={<div className="flex items-center">
+                                            <div>
+                                                {dateSort === "desc" ? (
+                                                    <IoArrowUp />
+                                                ) : (
+                                                    <IoArrowDown />
+                                                )}
                                             </div>
-                                        </div>
+                                            <div>Date</div>
+                                        </div>} />
+
                                     </div>
                                 </MenuModal>
                             )}
