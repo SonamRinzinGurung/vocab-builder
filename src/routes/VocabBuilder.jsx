@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { db } from "../firebase-config";
 import axios from "axios";
 import {
@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import getWordSuggestion from "../utils/getWordSuggestion";
 import useKeyPress from "../hooks/useKeyPress";
 import ClipLoader from "react-spinners/ClipLoader";
-import { IoIosSearch } from "react-icons/io";
+import { IoIosSearch, IoIosBookmark, IoIosClose } from "react-icons/io";
 import ToolTip from "../components/ToolTip";
 
 const VocabBuilder = ({ user }) => {
@@ -150,6 +150,19 @@ const VocabBuilder = ({ user }) => {
     addDefinition();
   };
 
+  const handleClearSearch = () => {
+    setSearch("")
+    setWordAddStatus(false);
+  }
+
+  useEffect(() => {
+    if (definition?.word === search) {
+      setWordAddStatus(true);
+    } else {
+      setWordAddStatus(false);
+    }
+  }, [definition, search])
+
   return (
     <main className="ml-4 lg:ml-8 my-10">
       <div className="flex flex-col gap-4 ">
@@ -161,7 +174,7 @@ const VocabBuilder = ({ user }) => {
         </header>
         <form>
           <div className="flex gap-4 flex-col lg:flex-row items-center">
-            <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-4 items-center gap-4">
+            <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-3 items-center gap-2 md:w-96 w-80 h-12">
               <input
                 ref={searchBoxRef}
                 className="bg:white dark:bg-gray-800 outline-none"
@@ -175,13 +188,14 @@ const VocabBuilder = ({ user }) => {
                 placeholder="Search"
               />
               <p
-                className={`px-2 text-gray-400 hidden lg:block ${search && "invisible"
+                className={`ml-auto text-gray-400 hidden lg:block ${search && "invisible"
                   }`}
               >
                 Press /
               </p>
+              <button type="button" onClick={handleClearSearch} className={`${!search && 'hidden'}`}><IoIosClose size={30} /></button>
               <button
-                className="cursor-pointer"
+                className="cursor-pointer ml-auto"
                 onClick={handleSearch}
                 type="submit"
               >
@@ -195,7 +209,8 @@ const VocabBuilder = ({ user }) => {
                 onClick={handleAddDefinition}
                 ref={addBtnRef}
               >
-                Add
+                <IoIosBookmark size={20} className="inline-block mr-1" />
+                <span>Save</span>
                 <ToolTip text="add to vocab mountain" contentRef={addBtnRef} />
               </button>
             )}

@@ -101,7 +101,7 @@ const SignUp = () => {
 
               <div className="flex justify-center rounded-sm shadow-md bg-primary hover:shadow-lg h-8">
                 <button
-                  className="text-lg font-medium text-gray-100"
+                  className="text-lg font-medium text-gray-100 w-full"
                   type="submit"
                   onClick={onSubmit}
                 >
