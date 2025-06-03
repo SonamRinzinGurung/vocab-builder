@@ -3,12 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root{
+  --bottom-sheet-bg-color: white;
+  --bottom-sheet-text-color: black;
+
+}
+
 body {
   font-family: "Inter", Sans-Serif;
   background: #f0f4f8;
   font-weight: 400;
   line-height: 1.75;
   color: #102a43;
+}
+
+.dark {
+  --bottom-sheet-bg-color: rgb(42, 42, 42);
+  --bottom-sheet-text-color: white;
 }
 h1,
 h2,

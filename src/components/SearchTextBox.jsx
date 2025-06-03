@@ -36,7 +36,7 @@ const SearchTextBox = ({ searchBoxRef, search, setSearch, setWordAddStatus, hand
 }
 
 SearchTextBox.propTypes = {
-    searchBoxRef: PropTypes.node.isRequired,
+    searchBoxRef: PropTypes.object.isRequired,
     search: PropTypes.string.isRequired,
     setSearch: PropTypes.func.isRequired,
     setWordAddStatus: PropTypes.func,
