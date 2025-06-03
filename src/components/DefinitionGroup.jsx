@@ -11,6 +11,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ToolTip from "./ToolTip";
 import useWindowSize from "../hooks/useWindowSize";
+import MenuItem from "./MenuItem";
 
 const DefinitionGroup = ({ vocab, source }) => {
   const [open, setOpen] = useState(false);
@@ -83,21 +84,23 @@ const DefinitionGroup = ({ vocab, source }) => {
           </div>
           {modal && (
             <MenuModal
-              className={`z-50 w-40 top-4 ${isMobile ? "right-1" : "left-1"}`}
+              className={`z-50 top-4 ${isMobile ? "right-1" : "left-1"} w-32 lg:w-48`}
               modalRef={modalRef}
               setModal={setModal}
             >
-              <button onClick={() => moveWord(vocab?.id)} className="rounded-sm hover:text-blue-500 border-gray-200 dark:border-gray-700">
-                {source === "vocab-mountain" && "Move to vocab valley"}
-                {source === "vocab-valley" && "Move to vocab mountain"}
-              </button>
-              <hr className="w-10/12 mx-auto" />
-              <button
-                onClick={() => removeWord(vocab?.id)}
-                className="rounded-sm hover:text-red-500 border-gray-200 dark:border-gray-700"
-              >
+              <MenuItem handleClick={() => moveWord(vocab?.id)} content={
+                <div className="text-start">
+                  {source === "vocab-mountain" && "Move to Valley"}
+                  {source === "vocab-valley" && "Move to Mountain"}
+                </div>
+              } />
+
+              <MenuItem handleClick={() => removeWord(vocab?.id)} content={
+                <div className="text-start">
                 Delete word
-              </button>
+                </div>
+              } />
+
             </MenuModal>
           )}
         </div>
