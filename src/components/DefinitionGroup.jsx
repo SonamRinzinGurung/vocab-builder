@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 import ToolTip from "./ToolTip";
 import useWindowSize from "../hooks/useWindowSize";
 import MenuItem from "./MenuItem";
+import MobileMenuModal from "./MobileMenuModal";
+import { RiFileTransferLine } from "react-icons/ri";
+import { MdDeleteOutline } from "react-icons/md";
 
 const DefinitionGroup = ({ vocab, source }) => {
   const [open, setOpen] = useState(false);
@@ -39,19 +42,23 @@ const DefinitionGroup = ({ vocab, source }) => {
   const { mutate: moveWord } = useMutation({
     mutationFn: async (id) => {
       const docRef = doc(db, "vocab", id);
-      await updateDoc(docRef, { group: source === "vocab-mountain" ? "vocab-valley" : "vocab-mountain" })
+      await updateDoc(docRef, {
+        group: source === "vocab-mountain" ? "vocab-valley" : "vocab-mountain",
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(source);
-      const message = source === "vocab-mountain" ? "vocab valley" : "vocab mountain";
+      const message =
+        source === "vocab-mountain" ? "vocab valley" : "vocab mountain";
       toast.success(`Word moved successfully to ${message}`);
     },
     onError: (error) => {
       console.log(error);
       toast.error("Error occurred!");
-    }
-  })
-  useEffect(() => { // listen for clicks on the word to open/close the definition group but not the option icon to open/close the modal
+    },
+  });
+  useEffect(() => {
+  // listen for clicks on the word to open/close the definition group but not the option icon to open/close the modal
     const refInstance = ref.current;
 
     function listenExceptModal(event) {
@@ -82,26 +89,69 @@ const DefinitionGroup = ({ vocab, source }) => {
             <BsThreeDots />
             <ToolTip position={"right"} text="options" contentRef={optionRef} />
           </div>
-          {modal && (
+          {modal && !isMobile && (
             <MenuModal
-              className={`z-50 top-4 ${isMobile ? "right-1" : "left-1"} w-32 lg:w-48`}
+              className={`z-50 top-4 ${isMobile ? "right-1" : "left-1"
+                } w-52`}
               modalRef={modalRef}
               setModal={setModal}
             >
-              <MenuItem handleClick={() => moveWord(vocab?.id)} content={
-                <div className="text-start">
-                  {source === "vocab-mountain" && "Move to Valley"}
-                  {source === "vocab-valley" && "Move to Mountain"}
-                </div>
-              } />
+              <MenuItem
+                handleClick={() => moveWord(vocab?.id)}
+                content={
+                  <div className="flex items-center gap-2">
+                    <RiFileTransferLine />
+                    {source === "vocab-mountain" && "Move to Valley"}
+                    {source === "vocab-valley" && "Move to Mountain"}
+                  </div>
+                }
+              />
 
-              <MenuItem handleClick={() => removeWord(vocab?.id)} content={
-                <div className="text-start">
-                Delete word
-                </div>
-              } />
-
+              <MenuItem
+                handleClick={() => removeWord(vocab?.id)}
+                content={
+                  <div className="flex items-center gap-2">
+                    <MdDeleteOutline />
+                    Delete word
+                  </div>
+                }
+              />
             </MenuModal>
+          )}
+          {isMobile && (
+            <MobileMenuModal
+              isOpen={modal}
+              setIsOpen={setModal}
+              content={
+                <div className="flex flex-col gap-8">
+                  <div className="flex w-full items-center justify-between">
+                    <div className="text-xl font-medium">Options</div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <MenuItem
+                      handleClick={() => moveWord(vocab?.id)}
+                      content={
+                        <div className="flex items-center gap-2">
+                          <RiFileTransferLine />
+                          {source === "vocab-mountain" && "Move to Valley"}
+                          {source === "vocab-valley" && "Move to Mountain"}
+                        </div>
+                      }
+                    />
+
+                    <MenuItem
+                      handleClick={() => removeWord(vocab?.id)}
+                      content={
+                        <div className="flex items-center gap-2">
+                          <MdDeleteOutline />
+                          Delete word
+                        </div>
+                      }
+                    />
+                  </div>
+                </div>
+              }
+            />
           )}
         </div>
       </div>
