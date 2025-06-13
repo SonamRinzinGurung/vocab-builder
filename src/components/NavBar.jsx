@@ -120,6 +120,16 @@ const NavBar = () => {
                 >
                   <span className="font-subHead text-xl">Vocab Valley</span>
                 </NavLink>
+                <NavLink
+                  onClick={toggleMenu}
+                  to={"/vocab-test"}
+                  className={({ isActive }) =>
+                    `w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2 ${isActive ? "text-gray-100 bg-primary" : ""
+                    }`
+                  }
+                >
+                  <span className="font-subHead text-xl">Vocab Test</span>
+                </NavLink>
                 <button
                   onClick={handleLogout}
                   className="w-full pl-8 py-4  text-gray-100 hover:bg-[#f8f0f0] hover:text-red-700 border-b-2 text-left"
@@ -169,6 +179,15 @@ const NavBar = () => {
                 }
               >
                 Valley
+              </NavLink>
+              <NavLink
+                to="/vocab-test"
+                className={({ isActive }) =>
+                  `p-4 hover:bg-primary hover:text-gray-100 hidden lg:block ${isActive ? "text-gray-100 bg-primary" : ""
+                  }`
+                }
+              >
+                Test
               </NavLink>
 
               <button onClick={toggleMenu}>
