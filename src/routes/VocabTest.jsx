@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { shuffleArray } from "../utils/shuffleArray";
 import { toast } from "react-toastify";
+import VocabTestSettings from "../components/VocabTestSettings";
+import WordSelectionModal from "../components/WordSelectionModal";
+import VocabTestQuiz from "../components/VocabTestQuiz";
+import VocabTestResults from "../components/VocabTestResults";
 
 const VocabTest = ({ user }) => {
     useSetTitle("Vocab Test");
@@ -15,7 +26,8 @@ const VocabTest = ({ user }) => {
     const [testWords, setTestWords] = useState([]); // stores the words selected for the test
     const [questionOptions, setQuestionOptions] = useState([]); // stores the options for each question in the test
     const [selectedOptions, setSelectedOptions] = useState({}); // stores the user's selected options for each question
-
+    const [selectedWords, setSelectedWords] = useState([]); // stores the words selected by the user for the test
+    const [showSelectWordsModal, setShowSelectWordsModal] = useState(false); // controls the visibility of the select words modal
     const queryClient = useQueryClient();
 
     // Function to reset the test states
@@ -25,7 +37,9 @@ const VocabTest = ({ user }) => {
         setTestWords([]);
         setQuestionOptions([]);
         setSelectedOptions({});
-    }
+        setSelectedWords([]);
+        setShowSelectWordsModal(false);
+    };
 
     const {
         error,
@@ -59,31 +73,43 @@ const VocabTest = ({ user }) => {
     }, [wordCount, result]);
 
     const generateOptions = (currentWord, allWords) => {
-        const options = allWords.filter(word => word.id !== currentWord.id)
+        const options = allWords.filter((word) => word.id !== currentWord.id);
 
-        const shuffledOptions = shuffleArray(options)
+        const shuffledOptions = shuffleArray(options);
 
-        const shuffledLimitedOptions = shuffledOptions.slice(0, 3).map(word => word.meanings[0].definitions[0].definition);
+        const shuffledLimitedOptions = shuffledOptions
+            .slice(0, 3)
+            .map((word) => word.meanings[0].definitions[0].definition);
 
-        shuffledLimitedOptions.push(currentWord.meanings[0].definitions[0].definition);
+        shuffledLimitedOptions.push(
+            currentWord.meanings[0].definitions[0].definition
+        );
         return shuffleArray(shuffledLimitedOptions);
-    }
+    };
 
     const handleStartTest = () => {
-
-        resetTest();
-
-        setTestStep(1);
+        if (selectedWords.length > 0) {
+            // If specific words are selected, use them
+            const optionsArr = testWords?.map((word) =>
+                generateOptions(word, result)
+            );
+            setQuestionOptions(optionsArr);
+            setTestStep(1);
+            return;
+        }
 
         const shuffledWords = shuffleArray(result);
-        const limitedWords = shuffledWords?.slice(0, wordCount) || []
+        const limitedWords = shuffledWords?.slice(0, wordCount) || [];
         setTestWords(limitedWords);
 
         // Generate options for each word and store them
-        const optionsArr = limitedWords?.map(word => generateOptions(word, result));
+        const optionsArr = limitedWords?.map((word) =>
+            generateOptions(word, result)
+        );
         setQuestionOptions(optionsArr);
         // console.log(optionsArr)
 
+        setTestStep(1);
     };
 
     // Mutation to move the word to Vocab Valley
@@ -94,8 +120,7 @@ const VocabTest = ({ user }) => {
                 group: "vocab-valley",
             });
         },
-        onSuccess: () => {
-        },
+        onSuccess: () => { },
         onError: (error) => {
             console.log(error);
             toast.error("Error occurred!");
@@ -104,9 +129,17 @@ const VocabTest = ({ user }) => {
 
     const handleMoveToVocabValley = () => {
         try {
-            const correctAnswers = testWords.filter((word, index) => selectedOptions[index] === word.meanings[0].definitions[0].definition);
+            const correctAnswers = testWords.filter(
+                (word, index) =>
+                    selectedOptions[index] === word.meanings[0].definitions[0].definition
+            );
 
             console.log(correctAnswers);
+
+            if (correctAnswers.length === 0) {
+                toast.error("No correct answers to move to Vocab Valley.");
+                return;
+            }
 
             correctAnswers.forEach((word) => {
                 moveWord(word.id);
@@ -115,12 +148,35 @@ const VocabTest = ({ user }) => {
             queryClient.invalidateQueries("vocab-mountain");
             toast.success(`Word moved successfully to vocab valley`);
             resetTest();
-
         } catch (error) {
             console.error("Error moving words to Vocab Valley:", error);
             toast.error("Error moving words to Vocab Valley");
         }
-    }
+    };
+
+    const handleWordsSelection = (word) => {
+        setSelectedWords((prev) => {
+            if (prev.includes(word.id)) {
+                return prev.filter((id) => id !== word.id);
+            } else {
+                return [...prev, word.id];
+            }
+        });
+    };
+    const handleConfirmWordsSelection = () => {
+        if (selectedWords.length === 0) {
+            toast.error("Please select at least one word.");
+            return;
+        }
+        setTestWords(result.filter((word) => selectedWords.includes(word.id)));
+        setWordCount(selectedWords.length);
+
+        setShowSelectWordsModal(false);
+    };
+
+    const handleCancelSelection = () => {
+        resetTest();
+    };
 
     if (error) return "An error has occurred: " + error.message;
     if (isPending || isQueryLoading) return null;
@@ -133,94 +189,44 @@ const VocabTest = ({ user }) => {
                     test your knowledge of the words you&apos;ve learned
                 </p>
             </header>
+
             <article className="flex flex-col gap-4 items-center lg:items-start">
                 {testStep === 0 && (
-                    <div className="flex flex-col gap-2">
-                        <h4>Setup your desired test settings</h4>
-
-                        <label className="flex flex-col gap-1">
-                            <span>Number of questions</span>
-                            <input
-                                type="number"
-                                value={wordCount}
-                                onChange={(e) => setWordCount(e.target.value)}
-                                min={1}
-                                max={result?.length || 10}
-                                className="border border-gray-300 rounded p-2"
-                            />
-                        </label>
-                        <button onClick={handleStartTest}>take test</button>
-                    </div>
+                    <VocabTestSettings
+                        wordCount={wordCount}
+                        setWordCount={setWordCount}
+                        maxLength={result?.length}
+                        setShowSelectWordsModal={setShowSelectWordsModal}
+                        handleStartTest={handleStartTest}
+                    />
+                )}
+                {showSelectWordsModal && (
+                    <WordSelectionModal
+                        result={result}
+                        handleWordsSelection={handleWordsSelection}
+                        selectedWords={selectedWords}
+                        handleConfirmWordsSelection={handleConfirmWordsSelection}
+                        handleCancelSelection={handleCancelSelection}
+                    />
                 )}
                 {testStep === 1 && (
-                    <div className="flex flex-col gap-2">
-                        <h4>Test your knowledge</h4>
-                        {testWords.map((word, index) => (
-                            <div key={index} className="border p-4 rounded">
-                                <p>
-                                    <strong>Word:</strong> {word.word}
-                                </p>
-                                <p>
-                                    <strong>Options:</strong>
-                                    <ul className="list-disc pl-5">
-                                        {questionOptions[index]?.map((option, idx) => (
-                                            <li key={idx} className="cursor-pointer hover:bg-gray-300 p-1 rounded flex items-center gap-2">
-                                                <input
-                                                    type="radio"
-                                                    name={`question-${index}`}
-                                                    value={option}
-                                                    checked={selectedOptions[index] === option}
-                                                    onChange={() =>
-                                                        setSelectedOptions((prev) => ({
-                                                            ...prev,
-                                                            [index]: option,
-                                                        }))
-                                                    }
-                                                />
-                                                <span>{option}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </p>
-                            </div>
-                        ))}
-
-                        <button onClick={() => setTestStep(2)}>Finish Test</button>
-                    </div>
+                    <VocabTestQuiz
+                        testWords={testWords}
+                        questionOptions={questionOptions}
+                        setSelectedOptions={setSelectedOptions}
+                        selectedOptions={selectedOptions}
+                        setTestStep={setTestStep}
+                    />
                 )}
 
-                {
-                    testStep === 2 && (
-                        <div className="flex flex-col gap-2">
-                            <h4>Test Results</h4>
-                            {testWords.map((word, index) => (
-                                <div key={index} className="border p-4 rounded">
-                                    <p>
-                                        <strong>Word:</strong> {word.word}
-                                    </p>
-                                    <p>
-                                        <strong>Your Answer:</strong> {selectedOptions[index] || "Not answered"}
-                                    </p>
-                                    <p>
-                                        <strong>Correct Answer:</strong> {word.meanings[0].definitions[0].definition}
-                                    </p>
-                                </div>
-                            ))}
-                            <p>
-                                <strong>Total Questions:</strong> {testWords.length}
-                            </p>
-                            <p>
-                                <strong>Correct Answers:</strong> {testWords.filter((word, index) => selectedOptions[index] === word.meanings[0].definitions[0].definition).length}
-                            </p>
-                            <p>
-                                <strong>Score:</strong> {Math.round((testWords.filter((word, index) => selectedOptions[index] === word.meanings[0].definitions[0].definition).length / testWords.length) * 100)}%
-                            </p>
-
-                            <button onClick={resetTest}>Retake Test</button>
-                            <button onClick={handleMoveToVocabValley}>Move correct answer to Vocab Valley</button>
-                        </div>
-                    )
-                }
+                {testStep === 2 && (
+                    <VocabTestResults
+                        testWords={testWords}
+                        selectedOptions={selectedOptions}
+                        resetTest={resetTest}
+                        handleMoveToVocabValley={handleMoveToVocabValley}
+                    />
+                )}
             </article>
         </main>
     );
