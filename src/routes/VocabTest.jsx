@@ -14,7 +14,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { shuffleArray } from "../utils/shuffleArray";
 import { toast } from "react-toastify";
 import VocabTestSettings from "../components/VocabTestSettings";
-import WordSelectionModal from "../components/WordSelectionModal";
 import VocabTestQuiz from "../components/VocabTestQuiz";
 import VocabTestResults from "../components/VocabTestResults";
 
@@ -22,7 +21,7 @@ const VocabTest = ({ user }) => {
     useSetTitle("Vocab Test");
     const [result, setResult] = useState(null); // stores all the search results or the fetched data
     const [testStep, setTestStep] = useState(0); // tracks the current step in the test
-    const [wordCount, setWordCount] = useState(10); // tracks the number of words in the test
+    const [wordCount, setWordCount] = useState(""); // tracks the number of words in the test
     const [testWords, setTestWords] = useState([]); // stores the words selected for the test
     const [questionOptions, setQuestionOptions] = useState([]); // stores the options for each question in the test
     const [selectedOptions, setSelectedOptions] = useState({}); // stores the user's selected options for each question
@@ -33,7 +32,7 @@ const VocabTest = ({ user }) => {
     // Function to reset the test states
     const resetTest = () => {
         setTestStep(0);
-        setWordCount(10);
+        setWordCount("");
         setTestWords([]);
         setQuestionOptions([]);
         setSelectedOptions({});
@@ -134,8 +133,6 @@ const VocabTest = ({ user }) => {
                     selectedOptions[index] === word.meanings[0].definitions[0].definition
             );
 
-            console.log(correctAnswers);
-
             if (correctAnswers.length === 0) {
                 toast.error("No correct answers to move to Vocab Valley.");
                 return;
@@ -178,11 +175,12 @@ const VocabTest = ({ user }) => {
         resetTest();
     };
 
-    if (error) return "An error has occurred: " + error.message;
+    if (error) return <p>An error has occurred: + {error.message};</p>;
+
     if (isPending || isQueryLoading) return null;
 
     return (
-        <main className="flex flex-col gap-6 lg:ml-8 my-10">
+        <main className="flex flex-col gap-6 lg:ml-8 ml-2 mr-2 my-10 relative">
             <header className="text-center lg:text-start">
                 <h1>Vocab Test</h1>
                 <p className="font-subHead opacity-50">
@@ -190,25 +188,23 @@ const VocabTest = ({ user }) => {
                 </p>
             </header>
 
-            <article className="flex flex-col gap-4 items-center lg:items-start">
+            <article className="flex flex-col items-center lg:items-start">
                 {testStep === 0 && (
                     <VocabTestSettings
                         wordCount={wordCount}
                         setWordCount={setWordCount}
                         maxLength={result?.length}
+                        showSelectWordsModal={showSelectWordsModal}
                         setShowSelectWordsModal={setShowSelectWordsModal}
                         handleStartTest={handleStartTest}
-                    />
-                )}
-                {showSelectWordsModal && (
-                    <WordSelectionModal
                         result={result}
-                        handleWordsSelection={handleWordsSelection}
                         selectedWords={selectedWords}
+                        handleWordsSelection={handleWordsSelection}
                         handleConfirmWordsSelection={handleConfirmWordsSelection}
                         handleCancelSelection={handleCancelSelection}
                     />
                 )}
+
                 {testStep === 1 && (
                     <VocabTestQuiz
                         testWords={testWords}
