@@ -171,7 +171,7 @@ const DefinitionGroup = ({ vocab, source }) => {
           {vocab?.meanings.map((meaning, index) => {
             return (
               <div key={index} className="definition p-2">
-                <div className="italic opacity-85">{meaning.partOfSpeech}</div>
+                <div className="italic font-bold opacity-95">{meaning.partOfSpeech}</div>
 
                 <WordMeaningGroup meaning={meaning} />
               </div>

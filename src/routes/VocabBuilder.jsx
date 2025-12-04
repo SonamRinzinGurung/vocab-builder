@@ -22,6 +22,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { IoIosBookmark } from "react-icons/io";
 import ToolTip from "../components/ToolTip";
 import SearchTextBox from "../components/SearchTextBox";
+import ReviewSession from "../components/review/ReviewSession";
 
 const VocabBuilder = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -36,6 +37,7 @@ const VocabBuilder = ({ user }) => {
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
   const addBtnRef = useRef(null);
+  const [reviewWords, setReviewWords] = useState([]);
 
   useKeyPress("/", (event) => {
     // focus on search box when / is pressed
@@ -63,6 +65,22 @@ const VocabBuilder = ({ user }) => {
       return fetchData;
     },
   });
+
+  useQuery({
+    queryKey: ["review-words-today"],
+    queryFn: async () => {
+      const q = query(collection(db, "vocab"), where("uid", "==", user.uid,))
+      const querySnapShot = await getDocs(q);
+      const fetchData = [];
+      querySnapShot.forEach((doc) => {
+        if (doc.id == "wyx1daYuHVD89ePGJ0OG") {
+          fetchData.push({ id: doc.id, ...doc.data() });
+        }
+      });
+      setReviewWords(fetchData);
+      return fetchData;
+    }
+  })
 
   // search for the word
   const { mutate: searchWord } = useMutation({
@@ -157,9 +175,13 @@ const VocabBuilder = ({ user }) => {
   }
 
   useEffect(() => {
-    if (definition?.word === search) {
-      setWordAddStatus(true);
-    } else {
+    if (definition?.word && search) {
+      if (definition?.word.toLowerCase() === search.trim().toLowerCase()) {
+        setWordAddStatus(true);
+      } else {
+        setWordAddStatus(false);
+      }
+    } else if (!definition) {
       setWordAddStatus(false);
     }
   }, [definition, search])
@@ -167,6 +189,7 @@ const VocabBuilder = ({ user }) => {
   return (
     <main className="ml-4 lg:ml-8 my-10">
       <div className="flex flex-col gap-4 ">
+        <ReviewSession words={reviewWords} />
         <header className="text-center lg:text-start">
           <h1>Vocab Builder</h1>
           <p className="font-subHead opacity-50">
@@ -211,7 +234,7 @@ const VocabBuilder = ({ user }) => {
             {definition?.meanings.map((meaning, index) => {
               return (
                 <div key={index}>
-                  <div className="italic opacity-85">
+                  <div className="italic font-bold opacity-95">
                     {meaning.partOfSpeech}
                   </div>
 
