@@ -9,11 +9,11 @@ export default function RatingButtons({ onRate }) {
     ];
 
     return (
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4 justify-center">
             {rates.map(r => (
                 <button
                     key={r.q}
-                    className={`${r.color} text-white px-4 py-2 rounded-xl`}
+                    className={`${r.color} text-white px-4 py-2 text-sm rounded-lg`}
                     onClick={() => onRate(r.q)}
                 >
                     {r.label}

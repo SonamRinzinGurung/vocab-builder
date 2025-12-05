@@ -66,20 +66,46 @@ const VocabBuilder = ({ user }) => {
     },
   });
 
-  useQuery({
-    queryKey: ["review-words-today"],
-    queryFn: async () => {
-      const q = query(collection(db, "vocab"), where("uid", "==", user.uid,))
-      const querySnapShot = await getDocs(q);
-      const fetchData = [];
-      querySnapShot.forEach((doc) => {
-        if (doc.id == "wyx1daYuHVD89ePGJ0OG") {
-          fetchData.push({ id: doc.id, ...doc.data() });
-        }
-      });
-      setReviewWords(fetchData);
-      return fetchData;
+  async function getDueWords(userId, maxSession = 10) {
+    const now = new Date();
+    const dueQuery = query(
+      collection(db, "vocab"),
+      where("uid", "==", userId),
+      where("nextReview", "<=", now)
+    );
+    const dueSnapshot = await getDocs(dueQuery);
+    let dueWords = dueSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    if (dueWords.length < maxSession) {
+      const remaining = maxSession - dueWords.length;
+
+      // Fetch all words without reviewCount OR reviewCount === 0
+      const newQuery = query(
+        collection(db, "vocab"),
+        where("uid", "==", userId)
+      );
+      const newSnapshot = await getDocs(newQuery);
+
+      //include docs where reviewCount is 0 or missing
+      let newWords = newSnapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(word => !("reviewCount" in word) || word.reviewCount === 0);
+
+      // Shuffle array randomly
+      newWords.sort(() => Math.random() - 0.5);
+
+      // Take only remaining number
+      newWords = newWords.slice(0, remaining);
+
+      dueWords = [...dueWords, ...newWords];
     }
+    setReviewWords(dueWords);
+    return dueWords;
+  }
+
+  useQuery({
+    queryKey: ["review-words-today", user.uid],
+    queryFn: () => getDueWords(user.uid, 10),
   })
 
   // search for the word
@@ -187,17 +213,17 @@ const VocabBuilder = ({ user }) => {
   }, [definition, search])
 
   return (
-    <main className="ml-4 lg:ml-8 my-10">
+    <main className="mx-4 lg:ml-8 my-10">
+      <h1 className="text-start mb-6">Vocab Builder</h1>
+      <ReviewSession words={reviewWords} />
       <div className="flex flex-col gap-4 ">
-        <ReviewSession words={reviewWords} />
-        <header className="text-center lg:text-start">
-          <h1>Vocab Builder</h1>
-          <p className="font-subHead opacity-50">
-            search for the new word you&apos;ve learned
+        <form className="mt-6">
+          <header className="text-start my-2">
+            <p className="font-subHead md:text-lg text-base opacity-70">
+              search for the new words
           </p>
-        </header>
-        <form>
-          <div className="flex gap-4 flex-col lg:flex-row items-center">
+          </header>
+          <div className="flex gap-2 flex-col">
             <SearchTextBox searchBoxRef={searchBoxRef} search={search} setSearch={setSearch} setWordAddStatus={setWordAddStatus} handleClearSearch={handleClearSearch} handleSearch={handleSearch} />
 
             {definition && wordAddStatus && !isLoading && (

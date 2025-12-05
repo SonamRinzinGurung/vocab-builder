@@ -4,13 +4,13 @@ import PropTypes from "prop-types";
 export default function Flashcard({ word, definition, mode, onReveal }) {
 
     return (
-        <div className="flex flex-col gap-2 w-full max-w-md bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-8 text-center">
+        <div className="flex flex-col gap-2 w-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded shadow-lg p-8 text-center">
             {mode === "showWord" && (
                 <>
                     <h1 className="text-2xl font-bold">{word}</h1>
 
                     <button
-                        className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg"
+                        className="mt-6 px-4 py-2 font-mono bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm"
                         onClick={onReveal}
                     >
                         Show Meaning

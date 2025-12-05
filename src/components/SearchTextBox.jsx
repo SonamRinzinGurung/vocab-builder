@@ -4,10 +4,11 @@ import { IoIosSearch, IoIosClose } from "react-icons/io";
 
 const SearchTextBox = ({ searchBoxRef, search, setSearch, setWordAddStatus, handleClearSearch, handleSearch }) => {
     return (
-        <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-3 items-center gap-2 md:w-96 w-80 h-12">
+        <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-3 items-center h-12 max-w-sm justify-evenly">
             <input
+                autoFocus
                 ref={searchBoxRef}
-                className="bg:white dark:bg-gray-800 outline-none"
+                className="bg:white dark:bg-gray-800 outline-none w-full"
                 type="text"
                 value={search}
                 onChange={(e) => {
@@ -17,20 +18,22 @@ const SearchTextBox = ({ searchBoxRef, search, setSearch, setWordAddStatus, hand
                 name="search"
                 placeholder="Search"
             />
-            <p
-                className={`ml-auto text-gray-400 hidden lg:block ${search && "invisible"
+            {/* <p
+                className={`ml-auto text-gray-400 hidden lg:block w-max ${search && "invisible"
                     }`}
             >
                 Press /
-            </p>
+            </p> */}
+            <div className="flex gap-2">
             <button type="button" onClick={handleClearSearch} className={`${!search && 'hidden'}`}><IoIosClose size={30} /></button>
             <button
-                className="cursor-pointer ml-auto"
+                    className="cursor-pointer ml-auto w-fit"
                 onClick={handleSearch}
                 type="submit"
-            >
+                >
                 <IoIosSearch size={25} />
             </button>
+            </div>
         </div>
     )
 }

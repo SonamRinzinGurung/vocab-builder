@@ -7,7 +7,7 @@ const WordMeaningGroup = ({ meaning }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="meaningGroup flex gap-2">
+    <div className="meaningGroup flex gap-2 ml-2">
       {/* {meaning.definitions[1] && (
         <div className="cursor-pointer mt-1" onClick={() => setOpen(!open)}>
           {open ? (

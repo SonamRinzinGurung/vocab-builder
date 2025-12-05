@@ -9,7 +9,7 @@ import { db } from "../../firebase-config.jsx";
 export default function ReviewSession({ words }) {
     const [index, setIndex] = useState(0);
     const [mode, setMode] = useState("showWord"); // "showWord", "showMeaning", "finished"
-
+    const [reviewStarted, setReviewStarted] = useState(false);
     const current = words[index];
 
     const goNext = () => {
@@ -44,17 +44,29 @@ export default function ReviewSession({ words }) {
     }
 
     return (
-        <div className="flex flex-col items-center gap-6 p-6">
-            <Flashcard
-                word={current?.word}
-                definition={current}
-                mode={mode}
-                onReveal={() => setMode("showMeaning")}
-            />
+        <div className="flex flex-col gap-6 max-w-sm">
+            {
+                !reviewStarted ? (
+                    <div className="flex flex-col items-center gap-2 px-6 py-4 rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg w-full">
+                        <p className="text-center md:text-lg text-sm">
+                            You have {words.length} words to review
+                        </p>
+                        <button className="font-mono px-6 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full" onClick={() => setReviewStarted(true)}>Start</button>
+                    </div>
+                ) : (
+                    <>
+                        <Flashcard
+                            word={current?.word}
+                            definition={current}
+                            mode={mode}
+                            onReveal={() => setMode("showMeaning")}
+                        />
 
-            {mode === "showMeaning" && (
-                <RatingButtons onRate={onRate} />
-            )}
+                            {mode === "showMeaning" && (
+                                <RatingButtons onRate={onRate} />
+                        )}</>
+                )
+            }
         </div>
     );
 }
