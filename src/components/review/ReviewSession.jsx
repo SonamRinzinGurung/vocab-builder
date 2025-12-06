@@ -3,14 +3,16 @@ import Flashcard from "./Flashcard.jsx";
 import RatingButtons from "./RatingButtons.jsx";
 import PropTypes from "prop-types";
 import { updateSRS } from "../../utils/updateSRS";
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.jsx";
+import { useQuery } from "@tanstack/react-query";
 
-export default function ReviewSession({ words }) {
+export default function ReviewSession({ words, uid }) {
     const [index, setIndex] = useState(0);
     const [mode, setMode] = useState("showWord"); // "showWord", "showMeaning", "finished"
     const [reviewStarted, setReviewStarted] = useState(false);
     const current = words[index];
+    const [stats, setStats] = useState(null);
 
     const goNext = () => {
         if (index === words.length - 1) {
@@ -21,6 +23,17 @@ export default function ReviewSession({ words }) {
         }
     };
 
+    useQuery({
+        queryKey: ["userStats", uid],
+        queryFn: async () => {
+            const ref = doc(db, "userStats", uid);
+            const snap = await getDoc(ref);
+            setStats(snap.exists() ? snap.data() : null);
+            return snap.exists() ? snap.data() : null;
+        },
+        staleTime: 1000 * 60 * 2, // 2 min
+    });
+
     const updateWordSRS = async (word, quality) => {
         const changes = updateSRS(word, quality); // get updated SRS values
         const docRef = doc(db, "vocab", word.id);
@@ -28,9 +41,67 @@ export default function ReviewSession({ words }) {
         return await updateDoc(docRef, changes); // update Firestore
     }
 
+    async function updateDailyStats(uid, deltaXp = 10) {
+        const statsRef = doc(db, "userStats", uid);
+        console.log(statsRef)
+        const statsSnap = await getDoc(statsRef);
+
+        const today = new Date().toISOString().slice(0, 10);
+
+        // initialize if not exists
+        if (!statsSnap.exists()) {
+            await setDoc(statsRef, {
+                date: today,
+                reviewsToday: 1,
+                xpToday: deltaXp,
+                totalReviews: 1,
+                lifetimeXp: deltaXp,
+                streak: 1,
+                longestStreak: 1,
+                lastActive: today
+            });
+            return;
+        }
+
+        const data = statsSnap.data();
+
+        let isNewDay = data.date !== today;
+
+        if (isNewDay) {
+            // Determine streak
+            const yesterday = new Date(Date.now() - 86400000)
+                .toISOString()
+                .slice(0, 10);
+
+            const newStreak = data.date === yesterday ? data.streak + 1 : 1;
+
+            await updateDoc(statsRef, {
+                date: today,
+                reviewsToday: 1,
+                xpToday: deltaXp,
+                totalReviews: data.totalReviews + 1,
+                lifetimeXp: data.lifetimeXp + deltaXp,
+                streak: newStreak,
+                longestStreak: Math.max(newStreak, data.longestStreak),
+                lastActive: today
+            });
+
+        } else {
+            // Same day → increment stats
+            await updateDoc(statsRef, {
+                reviewsToday: data.reviewsToday + 1,
+                xpToday: data.xpToday + deltaXp,
+                totalReviews: data.totalReviews + 1,
+                lifetimeXp: data.lifetimeXp + deltaXp,
+                lastActive: today
+            });
+        }
+    }
+
     async function onRate(quality) {
         // update SRS in Firestore
         await updateWordSRS(current, quality);
+        await updateDailyStats(current.uid, quality * 10); 
         goNext();
     }
 
@@ -73,4 +144,5 @@ export default function ReviewSession({ words }) {
 
 ReviewSession.propTypes = {
     words: PropTypes.arrayOf(PropTypes.object).isRequired,
+    uid: PropTypes.string.isRequired,
 };

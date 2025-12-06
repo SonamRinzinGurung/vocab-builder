@@ -22,7 +22,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { IoIosBookmark } from "react-icons/io";
 import ToolTip from "../components/ToolTip";
 import SearchTextBox from "../components/SearchTextBox";
-import ReviewSession from "../components/review/ReviewSession";
+import SummaryStatsBar from "../components/review/SummaryStatsBar";
 
 const VocabBuilder = ({ user }) => {
   useSetTitle("Vocab Builder");
@@ -75,7 +75,7 @@ const VocabBuilder = ({ user }) => {
     );
     const dueSnapshot = await getDocs(dueQuery);
     let dueWords = dueSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
+    console.log(dueWords)
     if (dueWords.length < maxSession) {
       const remaining = maxSession - dueWords.length;
 
@@ -215,7 +215,8 @@ const VocabBuilder = ({ user }) => {
   return (
     <main className="mx-4 lg:ml-8 my-10">
       <h1 className="text-start mb-6">Vocab Builder</h1>
-      <ReviewSession words={reviewWords} />
+      <SummaryStatsBar uid={user.uid} />
+      {/* <ReviewSession words={reviewWords} uid={user.uid} /> */}
       <div className="flex flex-col gap-4 ">
         <form className="mt-6">
           <header className="text-start my-2">
