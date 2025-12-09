@@ -11,6 +11,7 @@ const VocabMountain = lazy(() => import("./routes/VocabMountain"));
 const Root = lazy(() => import("./components/Root"));
 const VocabValley = lazy(() => import("./routes/VocabValley"));
 const VocabTest = lazy(() => import("./routes/VocabTest"))
+const Dashboard = lazy(() => import("./routes/Dashboard"));
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import VerifyNotice from "./routes/VerifyNotice";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <VocabTest />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/dashboard",
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
           </ProtectedRoute>
         ),
       },

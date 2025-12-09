@@ -4,7 +4,7 @@ import { IoIosSearch, IoIosClose } from "react-icons/io";
 
 const SearchTextBox = ({ searchBoxRef, search, setSearch, setWordAddStatus, handleClearSearch, handleSearch }) => {
     return (
-        <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-3 items-center h-12 max-w-sm justify-evenly">
+        <div className="flex bg-white dark:bg-gray-800 rounded-sm py-2 px-3 items-center h-12 max-w-sm md:max-w-xl justify-evenly">
             <input
                 autoFocus
                 ref={searchBoxRef}

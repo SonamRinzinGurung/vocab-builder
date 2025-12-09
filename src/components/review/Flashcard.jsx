@@ -2,9 +2,9 @@ import WordMeaningGroup from "../WordMeaningGroup";
 import PropTypes from "prop-types";
 
 export default function Flashcard({ word, definition, mode, onReveal }) {
-
     return (
-        <div className="flex flex-col gap-2 w-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded shadow-lg p-8 text-center">
+        <div className="flex flex-col gap-2 w-full px-8 pb-4 text-center">
+
             {mode === "showWord" && (
                 <>
                     <h1 className="text-2xl font-bold">{word}</h1>

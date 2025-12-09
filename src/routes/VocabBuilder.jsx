@@ -37,7 +37,6 @@ const VocabBuilder = ({ user }) => {
   const queryClient = useQueryClient();
   const searchBoxRef = useRef(null);
   const addBtnRef = useRef(null);
-  const [reviewWords, setReviewWords] = useState([]);
 
   useKeyPress("/", (event) => {
     // focus on search box when / is pressed
@@ -65,48 +64,6 @@ const VocabBuilder = ({ user }) => {
       return fetchData;
     },
   });
-
-  async function getDueWords(userId, maxSession = 10) {
-    const now = new Date();
-    const dueQuery = query(
-      collection(db, "vocab"),
-      where("uid", "==", userId),
-      where("nextReview", "<=", now)
-    );
-    const dueSnapshot = await getDocs(dueQuery);
-    let dueWords = dueSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    console.log(dueWords)
-    if (dueWords.length < maxSession) {
-      const remaining = maxSession - dueWords.length;
-
-      // Fetch all words without reviewCount OR reviewCount === 0
-      const newQuery = query(
-        collection(db, "vocab"),
-        where("uid", "==", userId)
-      );
-      const newSnapshot = await getDocs(newQuery);
-
-      //include docs where reviewCount is 0 or missing
-      let newWords = newSnapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(word => !("reviewCount" in word) || word.reviewCount === 0);
-
-      // Shuffle array randomly
-      newWords.sort(() => Math.random() - 0.5);
-
-      // Take only remaining number
-      newWords = newWords.slice(0, remaining);
-
-      dueWords = [...dueWords, ...newWords];
-    }
-    setReviewWords(dueWords);
-    return dueWords;
-  }
-
-  useQuery({
-    queryKey: ["review-words-today", user.uid],
-    queryFn: () => getDueWords(user.uid, 10),
-  })
 
   // search for the word
   const { mutate: searchWord } = useMutation({
@@ -216,7 +173,6 @@ const VocabBuilder = ({ user }) => {
     <main className="mx-4 lg:ml-8 my-10">
       <h1 className="text-start mb-6">Vocab Builder</h1>
       <SummaryStatsBar uid={user.uid} />
-      {/* <ReviewSession words={reviewWords} uid={user.uid} /> */}
       <div className="flex flex-col gap-4 ">
         <form className="mt-6">
           <header className="text-start my-2">

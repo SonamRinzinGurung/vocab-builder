@@ -5,34 +5,25 @@ import PropTypes from "prop-types";
 import { updateSRS } from "../../utils/updateSRS";
 import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.jsx";
-import { useQuery } from "@tanstack/react-query";
+import { LuPartyPopper } from "react-icons/lu";
+import { MdPendingActions } from "react-icons/md";
 
-export default function ReviewSession({ words, uid }) {
+export default function ReviewSession({ dueWords, userStats, unReviewed, refetchDueWords }) {
     const [index, setIndex] = useState(0);
     const [mode, setMode] = useState("showWord"); // "showWord", "showMeaning", "finished"
     const [reviewStarted, setReviewStarted] = useState(false);
-    const current = words[index];
-    const [stats, setStats] = useState(null);
+    const current = dueWords.length > 0 ? dueWords[index] : unReviewed[index];
+    const [reviewedCount, setReviewedCount] = useState(0);
 
+    const dailyGoal = 10;
     const goNext = () => {
-        if (index === words.length - 1) {
+        if (index === dueWords.length - 1) {
             setMode("finished");
         } else {
             setIndex(i => i + 1);
             setMode("showWord");
         }
     };
-
-    useQuery({
-        queryKey: ["userStats", uid],
-        queryFn: async () => {
-            const ref = doc(db, "userStats", uid);
-            const snap = await getDoc(ref);
-            setStats(snap.exists() ? snap.data() : null);
-            return snap.exists() ? snap.data() : null;
-        },
-        staleTime: 1000 * 60 * 2, // 2 min
-    });
 
     const updateWordSRS = async (word, quality) => {
         const changes = updateSRS(word, quality); // get updated SRS values
@@ -102,35 +93,73 @@ export default function ReviewSession({ words, uid }) {
         // update SRS in Firestore
         await updateWordSRS(current, quality);
         await updateDailyStats(current.uid, quality * 10); 
+        setReviewedCount(count => count + 1);
         goNext();
     }
 
     if (mode === "finished") {
         return (
-            <div className="flex flex-col items-center p-6 text-center">
-                <h2 className="text-2xl font-bold mb-4">Review Complete 🎉</h2>
-                <p>You reviewed {words.length} words today.</p>
+            <div className="flex flex-col gap-6 p-8 max-w-sm md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg text-center">
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 justify-center">Review Complete <LuPartyPopper /></h2>
+                <p className="md:text-sm text-xs">You have reviewed {userStats?.reviewsToday + reviewedCount || 0} word{(userStats?.reviewsToday || 0) <= 1 ? "" : "s"} today</p>
+                <button className="font-mono px-6 py-2 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full mt-6"
+                    onClick={() => {
+                        setIndex(0);
+                        setMode("showWord");
+                        setReviewStarted(false);
+                        setReviewedCount(0);
+                        refetchDueWords?.();
+                    }}
+                >Restart</button>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col gap-6 max-w-sm">
+        <div className="flex flex-col gap-6 max-w-sm md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg">
+
+            <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-sm h-2 overflow-hidden">
+                <div
+                    className="bg-primary dark:bg-blue-500 h-full rounded-sm transition-all duration-300"
+                    style={{
+                        width: `${Math.min((((userStats?.reviewsToday || 0) + reviewedCount) / dailyGoal) * 100, 100)}%`
+                    }}
+                ></div>
+            </div>
             {
                 !reviewStarted ? (
-                    <div className="flex flex-col items-center gap-2 px-6 py-4 rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg w-full">
-                        <p className="text-center md:text-lg text-sm">
-                            You have {words.length} words to review
-                        </p>
-                        <button className="font-mono px-6 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full" onClick={() => setReviewStarted(true)}>Start</button>
-                    </div>
+                    <>
+
+                        <div className="p-8">
+
+                            {dueWords.length > 0 ? (
+                                <>
+                                    <p className="md:text-lg text-sm font-semibold flex items-center gap-2"> <MdPendingActions className="text-blue-500" />
+                                        {dueWords.length} words due today</p>
+                                    <p className="md:text-sm text-xs text-slate-500">Start your review</p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="md:text-lg text-sm font-semibold flex items-center gap-2"><LuPartyPopper color="" /> You&apos;re all caught up!</p>
+                                    <p className="md:text-sm text-xs text-slate-500">Study new words instead</p>
+                                </>
+                            )}
+
+                            <button className="font-mono px-6 py-2 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full mt-6" onClick={() => setReviewStarted(true)}>Start</button>
+                        </div>
+                    </>
                 ) : (
                     <>
+                            <div className="px-4 pt-2">
+                                <span className="text-sm text-slate-500">Review {index + 1} of {dueWords.concat(unReviewed).length}</span>
+                            </div>
                         <Flashcard
                             word={current?.word}
                             definition={current}
                             mode={mode}
                             onReveal={() => setMode("showMeaning")}
+                                words={dueWords.concat(unReviewed)}
+                                index={index}
                         />
 
                             {mode === "showMeaning" && (
@@ -143,6 +172,8 @@ export default function ReviewSession({ words, uid }) {
 }
 
 ReviewSession.propTypes = {
-    words: PropTypes.arrayOf(PropTypes.object).isRequired,
-    uid: PropTypes.string.isRequired,
+    dueWords: PropTypes.arrayOf(PropTypes.object).isRequired,
+    userStats: PropTypes.object.isRequired,
+    unReviewed: PropTypes.arrayOf(PropTypes.object).isRequired,
+    refetchDueWords: PropTypes.func,
 };
