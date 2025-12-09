@@ -42,7 +42,6 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
         // initialize if not exists
         if (!statsSnap.exists()) {
             await setDoc(statsRef, {
-                date: today,
                 reviewsToday: 1,
                 xpToday: deltaXp,
                 totalReviews: 1,
@@ -67,7 +66,6 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
             const newStreak = data.date === yesterday ? data.streak + 1 : 1;
 
             await updateDoc(statsRef, {
-                date: today,
                 reviewsToday: 1,
                 xpToday: deltaXp,
                 totalReviews: data.totalReviews + 1,

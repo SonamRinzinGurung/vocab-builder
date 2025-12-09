@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import VocabTestSettings from "../components/VocabTestSettings";
 import VocabTestQuiz from "../components/VocabTestQuiz";
 import VocabTestResults from "../components/VocabTestResults";
+import PageLayout from "../components/PageLayout";
 
 const VocabTest = ({ user }) => {
     useSetTitle("Vocab Test");
@@ -180,15 +181,8 @@ const VocabTest = ({ user }) => {
     if (isPending || isQueryLoading) return null;
 
     return (
-        <main className="flex flex-col gap-6 lg:ml-8 ml-2 mr-2 my-10 relative">
-            <header className="text-center lg:text-start">
-                <h1>Vocab Test</h1>
-                <p className="font-subHead opacity-50">
-                    test your knowledge of the words you&apos;ve learned
-                </p>
-            </header>
-
-            <article className="flex flex-col items-center lg:items-start">
+        <PageLayout heading="Vocab Test" subHeading="test your knowledge of the words you've learned">
+            <article className="relative flex flex-col items-center lg:items-start">
                 {testStep === 0 && (
                     <VocabTestSettings
                         wordCount={wordCount}
@@ -224,7 +218,7 @@ const VocabTest = ({ user }) => {
                     />
                 )}
             </article>
-        </main>
+        </PageLayout>
     );
 };
 

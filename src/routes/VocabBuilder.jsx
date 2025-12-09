@@ -10,6 +10,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import WordMeaningGroup from "../components/WordMeaningGroup";
+import PageLayout from "../components/PageLayout";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import useSetTitle from "../hooks/useSetTitle";
@@ -170,16 +171,10 @@ const VocabBuilder = ({ user }) => {
   }, [definition, search])
 
   return (
-    <main className="mx-4 lg:ml-8 my-10">
-      <h1 className="text-start mb-6">Vocab Builder</h1>
+    <PageLayout heading="Vocab Builder" subHeading="search for new words">
       <SummaryStatsBar uid={user.uid} />
-      <div className="flex flex-col gap-4 ">
-        <form className="mt-6">
-          <header className="text-start my-2">
-            <p className="font-subHead md:text-lg text-base opacity-70">
-              search for the new words
-          </p>
-          </header>
+      <div className="flex flex-col gap-4 mt-8">
+        <form>
           <div className="flex gap-2 flex-col">
             <SearchTextBox searchBoxRef={searchBoxRef} search={search} setSearch={setSearch} setWordAddStatus={setWordAddStatus} handleClearSearch={handleClearSearch} handleSearch={handleSearch} />
 
@@ -255,7 +250,7 @@ const VocabBuilder = ({ user }) => {
           </div>
         </article>
       </div>
-    </main>
+    </PageLayout>
   );
 };
 

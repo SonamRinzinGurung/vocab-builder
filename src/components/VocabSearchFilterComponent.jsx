@@ -119,9 +119,9 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
     };
 
     return (
-        <>
-            <form className="mx-auto lg:mx-0">
-                <div className="flex gap-2 flex-row items-center">
+        <div className="">
+            <form className="">
+                <div className="flex gap-2 flex-row items-center md:max-w-xl">
                     <SearchTextBox searchBoxRef={searchBoxRef} search={search} setSearch={setSearch} handleClearSearch={handleClearSearch} handleSearch={handleSearch} setWordAddStatus={null} />
                     <div
                         ref={modalRef}
@@ -199,7 +199,7 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
             </form>
 
             {notFound && (
-                <div className="mx-auto lg:mx-0">
+                <div className="mt-4">
                     <span className="italic">
                         {" "}
                         This word is not in your vocab mountain
@@ -207,13 +207,13 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
                 </div>
             )}
             {notFound && suggestedWords?.length > 0 && (
-                <div className="mx-auto lg:mx-0">
+                <div className="mt-4">
                     <div className="font-subHead tracking-wider">Did you mean? </div>
-                    <div className="flex gap-2 flex-wrap justify-center lg:justify-start">
+                    <div className="flex gap-2 flex-wrap mt-2">
                         {suggestedWords.map((word, index) => {
                             return (
                                 <button
-                                    className="mt-1 border px-4 rounded-xl dark:hover:bg-gray-700 hover:bg-slate-300"
+                                    className="border px-4 rounded-xl dark:hover:bg-gray-700 hover:bg-slate-300"
                                     key={index}
                                     onClick={() => handleSearchSuggestedWord(word)}
                                 >
@@ -224,7 +224,7 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
                     </div>
                 </div>
             )}
-        </>
+        </div>
     )
 }
 

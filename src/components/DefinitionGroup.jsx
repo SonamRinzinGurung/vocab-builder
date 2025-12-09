@@ -157,27 +157,29 @@ const DefinitionGroup = ({ vocab, source }) => {
       </div>
 
       {open && (
-        <div className="phonetics flex gap-2 items-center p-2">
+        <div className="definition px-2 py-4">
+          {
+            (vocab?.phonetic || url) && (
+              <div className="phonetics flex gap-2 items-center">
           <div className="text-sm">{vocab?.phonetic}</div>
           {url && (
             <button onClick={playPause}>
               {playing ? <CiPause1 /> : <CiPlay1 />}
             </button>
           )}
-        </div>
-      )}
-      {open && (
+              </div>
+            )}
         <>
           {vocab?.meanings.map((meaning, index) => {
             return (
-              <div key={index} className="definition p-2">
+              <div key={index} className="meaning">
                 <div className="italic font-bold opacity-95">{meaning.partOfSpeech}</div>
-
                 <WordMeaningGroup meaning={meaning} />
               </div>
             );
           })}
         </>
+        </div>
       )}
     </div>
   );
