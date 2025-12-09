@@ -110,7 +110,7 @@ const VocabBuilder = ({ user }) => {
     onError: (data) => {
       setIsLoading(false);
       toast.error("Error occurred!");
-      console.log(console.log(data));
+      console.log(data);
     },
   });
 
@@ -175,7 +175,7 @@ const VocabBuilder = ({ user }) => {
       <SummaryStatsBar uid={user.uid} />
       <div className="flex flex-col gap-4 mt-8">
         <form>
-          <div className="flex gap-2 flex-col">
+          <div className="flex gap-2 flex-col md:max-w-xl">
             <SearchTextBox searchBoxRef={searchBoxRef} search={search} setSearch={setSearch} setWordAddStatus={setWordAddStatus} handleClearSearch={handleClearSearch} handleSearch={handleSearch} />
 
             {definition && wordAddStatus && !isLoading && (

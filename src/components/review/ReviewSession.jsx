@@ -34,7 +34,6 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
 
     async function updateDailyStats(uid, deltaXp = 10) {
         const statsRef = doc(db, "userStats", uid);
-        console.log(statsRef)
         const statsSnap = await getDoc(statsRef);
 
         const today = new Date().toISOString().slice(0, 10);
@@ -97,9 +96,9 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
 
     if (mode === "finished") {
         return (
-            <div className="flex flex-col gap-6 p-8 max-w-sm md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg text-center">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 justify-center">Review Complete <LuPartyPopper /></h2>
-                <p className="md:text-sm text-xs">You have reviewed {userStats?.reviewsToday + reviewedCount || 0} word{(userStats?.reviewsToday || 0) <= 1 ? "" : "s"} today</p>
+            <div className="flex flex-col p-8 md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg text-center">
+                <p className="text-xl md:text-2xl font-bold flex items-center gap-2 justify-center">Review Complete <LuPartyPopper /></p>
+                <p className="md:text-sm text-xs text-slate-500">You have reviewed {userStats?.reviewsToday + reviewedCount || 0} word{(userStats?.reviewsToday || 0) <= 1 ? "" : "s"} today</p>
                 <button className="font-mono px-6 py-2 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full mt-6"
                     onClick={() => {
                         setIndex(0);
@@ -114,7 +113,7 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
     }
 
     return (
-        <div className="flex flex-col gap-6 max-w-sm md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg">
+        <div className="flex flex-col gap-6 md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg">
 
             <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-sm h-2 overflow-hidden">
                 <div
@@ -128,17 +127,17 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
                 !reviewStarted ? (
                     <>
 
-                        <div className="p-8">
+                        <div className="p-8 flex flex-col items-center text-center">
 
                             {dueWords.length > 0 ? (
                                 <>
-                                    <p className="md:text-lg text-sm font-semibold flex items-center gap-2"> <MdPendingActions className="text-blue-500" />
-                                        {dueWords.length} words due today</p>
+                                    <p className="md:text-2xl text-xl font-bold flex items-center gap-2 justify-center"> <MdPendingActions className="text-blue-500" />
+                                        {dueWords.length} word{dueWords.length !== 1 ? "s" : ""} due today</p>
                                     <p className="md:text-sm text-xs text-slate-500">Start your review</p>
                                 </>
                             ) : (
                                 <>
-                                    <p className="md:text-lg text-sm font-semibold flex items-center gap-2"><LuPartyPopper color="" /> You&apos;re all caught up!</p>
+                                        <p className="md:text-2xl text-xl font-bold flex items-center gap-2 justify-center"> You&apos;re all caught up <LuPartyPopper color="" /></p>
                                     <p className="md:text-sm text-xs text-slate-500">Study new words instead</p>
                                 </>
                             )}

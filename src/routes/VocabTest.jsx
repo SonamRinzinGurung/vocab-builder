@@ -107,8 +107,6 @@ const VocabTest = ({ user }) => {
             generateOptions(word, result)
         );
         setQuestionOptions(optionsArr);
-        // console.log(optionsArr)
-
         setTestStep(1);
     };
 

@@ -7,7 +7,6 @@ import PageLayout from "../components/PageLayout.jsx";
 const Dashboard = ({ user }) => {
     const { dueWords, unReviewed, refetchDueWords } = useDueWords(user.uid);
     const { userStats } = useUserStats(user.uid);
-    // console.log(userStats)
     return (
         <PageLayout heading="Dashboard" subHeading="your learning progress at a glance">
             <ReviewSession dueWords={dueWords} userStats={userStats} unReviewed={unReviewed} refetchDueWords={refetchDueWords} />
