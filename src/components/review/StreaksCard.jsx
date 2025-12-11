@@ -16,7 +16,7 @@ const StreaksCard = ({ userStats }) => {
                         <HiOutlineFire className="text-white text-2xl" />
                     </div>
                     <div className="text-left">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Current Streak</p>
+                        <p className="text-xs uppercase tracking-wide">Current Streak</p>
                         <p className="text-3xl font-bold text-red-500">
                             {currentStreak} <span className="text-lg font-normal">day{currentStreak !== 1 ? "s" : ""}</span>
                         </p>
@@ -31,7 +31,7 @@ const StreaksCard = ({ userStats }) => {
                         <FaTrophy className="text-white text-2xl" />
                     </div>
                     <div className="text-left">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Longest Streak</p>
+                        <p className="text-xs uppercase tracking-wide">Longest Streak</p>
                         <p className="text-3xl font-bold text-yellow-500">
                             {longestStreak} <span className="text-lg font-normal">day{longestStreak !== 1 ? "s" : ""}</span>
                         </p>

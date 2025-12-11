@@ -91,17 +91,18 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
     async function onRate(quality) {
         // update SRS in Firestore
         await updateWordSRS(current, quality);
-        await updateDailyStats(current.uid, quality * 10); 
+        await updateDailyStats(current.uid, quality * 10);
         setReviewedCount(count => count + 1);
         goNext();
     }
 
+    {/* Finished Review Session */ }
     if (mode === "finished") {
         return (
             <div className="flex flex-col p-8 md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg text-center">
                 <p className="text-xl md:text-2xl font-bold flex items-center gap-2 justify-center">Review Complete <LuPartyPopper /></p>
-                <p className="md:text-sm text-xs text-slate-500">You have reviewed {userStats?.reviewsToday + reviewedCount || 0} word{(userStats?.reviewsToday || 0) <= 1 ? "" : "s"} today</p>
-                <button className="font-mono px-6 py-2 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full mt-6"
+                <p className="md:text-sm text-xs">You have reviewed {userStats?.reviewsToday + reviewedCount || 0} word{(userStats?.reviewsToday || 0) <= 1 ? "" : "s"} today</p>
+                <button className="font-mono px-6 py-2 bg-primary text-gray-100 rounded-sm w-full mt-6"
                     onClick={() => {
                         setIndex(0);
                         setMode("showWord");
@@ -117,17 +118,30 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
     return (
         <div className="flex flex-col gap-6 md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg">
 
-            <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-sm h-2 overflow-hidden">
-                <div
-                    className="bg-primary dark:bg-blue-500 h-full rounded-sm transition-all duration-300"
-                    style={{
-                        width: `${Math.min((((userStats?.reviewsToday || 0) + reviewedCount) / dailyGoal) * 100, 100)}%`
-                    }}
-                ></div>
-            </div>
             {
                 !reviewStarted ? (
                     <>
+                        {/* Progress Bar */}
+                        <div className="px-8 pt-8 flex flex-col items-center text-center gap-2">
+                            <div className="flex justify-between items-center">
+                                <span className="text-sm">{(userStats?.reviewsToday || 0) + reviewedCount} / {dailyGoal} words reviewed today</span>
+                            </div>
+
+
+                            <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                                <div
+                                    className="bg-primary h-full transition-all duration-300"
+                                    style={{
+                                        width: `${Math.min((((userStats?.reviewsToday || 0) + reviewedCount) / dailyGoal) * 100, 100)}%`
+                                    }}
+                                ></div>
+                            </div>
+
+
+                        </div>
+
+                        {/* DIVIDER */}
+                        <div className="mt-6 border-t border-slate-300 dark:border-slate-700 mx-2"></div>
 
                         <div className="p-8 flex flex-col items-center text-center">
 
@@ -135,7 +149,7 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
                                 <>
                                     <p className="md:text-2xl text-xl font-bold flex items-center gap-2 justify-center"> <MdPendingActions className="text-blue-500" />
                                         {dueWords.length} word{dueWords.length !== 1 ? "s" : ""} due today</p>
-                                    <p className="md:text-sm text-xs text-slate-500">Start your review</p>
+                                    <p className="md:text-sm text-xs text-slate-500 dark:text-slate-300">Start your review</p>
                                 </>
                             ) : (
                                 <>
@@ -144,13 +158,13 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
                                 </>
                             )}
 
-                            <button className="font-mono px-6 py-2 bg-primary  hover:bg-darkPrimary text-gray-100 rounded-sm w-full mt-6" onClick={() => setReviewStarted(true)}>Start</button>
+                            <button className="font-mono px-6 py-2 bg-primary text-gray-100 rounded-sm w-full mt-6" onClick={() => setReviewStarted(true)}>Start</button>
                         </div>
                     </>
                 ) : (
                     <>
                             <div className="px-4 pt-2">
-                                <span className="text-sm text-slate-500">Review {index + 1} of {dueWords.concat(unReviewed).length}</span>
+                                <span className="text-sm text-slate-500 dark:text-slate-300">Current review: {index + 1} of {dueWords.concat(unReviewed).length}</span>
                             </div>
                         <Flashcard
                             word={current?.word}

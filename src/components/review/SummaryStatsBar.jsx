@@ -10,29 +10,36 @@ const SummaryStatsBar = ({ uid }) => {
     const { userStats } = useUserStats(uid);
 
     return (
-        <Link to={"/dashboard"} className="flex justify-between items-center gap-2 px-6 py-4 rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow md:max-w-xl hover:scale-[1.02] transition-transform duration-200">
+        <Link to={"/dashboard"} className="flex justify-between items-center gap-4 px-6 md:px-20 py-4 rounded-lg border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-md md:max-w-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
 
             {/* Streak */}
-            <div className="flex flex-col items-center">
-                <FaFire className="text-red-500" />
-                <span className="text-sm font-medium text-center">{userStats?.streak || 0} day{userStats?.streak <= 1 ? "" : "s"}</span>
+            <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-1">
+                    <FaFire className="text-orange-500 text-lg" />
+                    <span className="text-base font-semibold">{userStats?.streak || 0}</span>
+                </div>
+                <span className="text-sm text-center">Streak</span>
             </div>
 
             {/* XP */}
-            <div className="flex flex-col items-center">
-                <FaStar className="text-yellow-500" />
-                <span className="text-sm font-medium text-center">{userStats?.xpToday || 0} XP</span>
+            <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-1">
+                    <FaStar className="text-yellow-500 text-lg" />
+                    <span className="text-base font-semibold">{userStats?.xpToday || 0}</span>
+                </div>
+                <span className="text-sm">XP</span>
             </div>
 
             {/* Words Due */}
-            <div className="flex flex-col items-center">
-                <MdPendingActions className="text-blue-500" />
-                <span className="text-sm font-medium text-center">{dueWords.length} due</span>
+            <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-1">
+                    <MdPendingActions className="text-cyan-500 text-lg" />
+                    <span className="text-base font-semibold">{dueWords.length}</span>
+                </div>
+                <span className="text-sm">Due</span>
             </div>
 
         </Link>
-
-
     )
 }
 
