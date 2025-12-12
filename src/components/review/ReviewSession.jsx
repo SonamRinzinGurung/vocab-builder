@@ -7,8 +7,9 @@ import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.jsx";
 import { LuPartyPopper } from "react-icons/lu";
 import { MdPendingActions } from "react-icons/md";
+import { formatDateLocal } from "../../utils/formatDateLocal.jsx";
 
-export default function ReviewSession({ dueWords, userStats, unReviewed, refetchDueWords }) {
+export default function ReviewSession({ dueWords, userStats, unReviewed, refetchDueWords, refetchUserStats }) {
     const [index, setIndex] = useState(0);
     const [mode, setMode] = useState("showWord"); // "showWord", "showMeaning", "finished"
     const [reviewStarted, setReviewStarted] = useState(false);
@@ -36,7 +37,8 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
         const statsRef = doc(db, "userStats", uid);
         const statsSnap = await getDoc(statsRef);
 
-        const today = new Date().toISOString().slice(0, 10);
+        // Get today's date in local time
+        const today = formatDateLocal(new Date(Date.now()));
 
         // initialize if not exists
         if (!statsSnap.exists()) {
@@ -59,9 +61,7 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
 
         if (isNewDay) {
             // Determine streak
-            const yesterday = new Date(Date.now() - 86400000)
-                .toISOString()
-                .slice(0, 10);
+            const yesterday = formatDateLocal(new Date(Date.now() - 86400000));
 
             const newStreak = data.date === yesterday ? data.streak + 1 : 1;
 
@@ -86,6 +86,7 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
                 lastActive: today
             });
         }
+        refetchUserStats?.();
     }
 
     async function onRate(quality) {
@@ -189,4 +190,5 @@ ReviewSession.propTypes = {
     userStats: PropTypes.object.isRequired,
     unReviewed: PropTypes.arrayOf(PropTypes.object).isRequired,
     refetchDueWords: PropTypes.func,
+    refetchUserStats: PropTypes.func,
 };
