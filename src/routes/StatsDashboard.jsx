@@ -10,7 +10,7 @@ const Dashboard = ({ user }) => {
     const { dueWords, unReviewed, refetchDueWords } = useDueWords(user.uid);
     const { userStats, refetchUserStats } = useUserStats(user.uid);
     return (
-        <PageLayout heading="Dashboard" subHeading="your learning progress at a glance">
+        <PageLayout heading="Your Stats" subHeading="and learning progress at a glance">
             <ReviewSession dueWords={dueWords} userStats={userStats} unReviewed={unReviewed} refetchDueWords={refetchDueWords} refetchUserStats={refetchUserStats} />
             <XPCard xpToday={userStats?.xpToday || 0} lifetimeXp={userStats?.lifetimeXp || 0} />
             <StreaksCard userStats={userStats} />

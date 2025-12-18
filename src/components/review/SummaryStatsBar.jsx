@@ -10,7 +10,7 @@ const SummaryStatsBar = ({ uid }) => {
     const { userStats } = useUserStats(uid);
 
     return (
-        <Link to={"/dashboard"} className="flex justify-between items-center gap-4 px-6 md:px-20 py-4 rounded-lg border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-md md:max-w-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
+        <Link to={"/stats"} className="flex justify-between items-center gap-4 px-6 md:px-20 py-4 rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-md md:max-w-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
 
             {/* Streak */}
             <div className="flex flex-col items-center gap-1">
