@@ -12,6 +12,8 @@ import MenuItem from "../MenuItem";
 import useWindowSize from "../../hooks/useWindowSize";
 import MobileMenuModal from "../MobileMenuModal";
 import { TfiStatsUp } from "react-icons/tfi";
+import LevelDisplay from "./LevelDisplay";
+import useUserStats from "../../hooks/useUserStats";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const NavBar = () => {
   const profileBtnRef = useRef(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const { isMobile } = useWindowSize();
+  const { userStats } = useUserStats(user?.uid);
 
   let darkModeLocal = localStorage.getItem("darkMode");
   darkModeLocal = darkModeLocal?.toLowerCase() === "true";
@@ -129,6 +132,8 @@ const NavBar = () => {
 
       <div className="flex items-center mr-6 py-1 ml-auto gap-4">
         {user?.emailVerified ? (
+          <>
+            <LevelDisplay lifetimeXp={userStats?.lifetimeXp} />
 
           <button
             ref={profileBtnRef}
@@ -234,6 +239,7 @@ const NavBar = () => {
             )}
 
           </button>
+          </>
         ) : (
 
           <div className="relative">

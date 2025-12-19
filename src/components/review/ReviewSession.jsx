@@ -29,7 +29,6 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
     const updateWordSRS = async (word, quality) => {
         const changes = updateSRS(word, quality); // get updated SRS values
         const docRef = doc(db, "vocab", word.id);
-        console.log(`Updating word ${word.word} with`, changes);
         return await updateDoc(docRef, changes); // update Firestore
     }
 

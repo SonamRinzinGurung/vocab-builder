@@ -25,7 +25,7 @@ export default function LevelCard({ xpToday, lifetimeXp }) {
                 </div>
                 <div className="w-full h-3 bg-slate-300 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-emerald-500 transition-all"
+                        className="h-full bg-[#F2C94C] transition-all"
                         style={{ width: `${progress * 100}%` }}
                     ></div>
                 </div>
@@ -42,7 +42,7 @@ export default function LevelCard({ xpToday, lifetimeXp }) {
                 </div>
                 <div className="w-full h-3 bg-slate-300 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-yellow-500 transition-all"
+                        className="h-full  bg-emerald-500 transition-all"
                         style={{ width: `${dailyProgress * 100}%` }}
                     ></div>
                 </div>
