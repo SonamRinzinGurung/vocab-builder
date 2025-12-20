@@ -1,13 +1,11 @@
 # VOCAB BUILDER
 
 
-#### [Live Site](https://vocab-builder-wp1d.onrender.com/)
+## [Live Site](https://vocab-builder-wp1d.onrender.com/)
 
 ## Description
 
-This app allows you to search for the meaning of words, listen to the pronunciation and add them to your personal dictionary (The Vocab Mountain). Even if you don't know the correct spelling of the word, just search it and the app will make suggestions based on the closest match.
-
- Once you have learned the word you may move them to the Vocab Valley or delete them from your dictionary.
+Vocab Builder is a web application designed to help users enhance their vocabulary through an efficient and engaging learning process. The app allows users to add words to their personal dictionary, manage them, and learn them using a Spaced Repetition System (SRS). With daily review sessions, users can effectively retain new words and track their learning progress through XP, levels, and streaks. The app also features custom quizzes, word suggestions for misspelled words, and a responsive design with dark mode support. User authentication is securely handled using Firebase.
 
 ## Technologies
 - React
@@ -15,16 +13,14 @@ This app allows you to search for the meaning of words, listen to the pronunciat
 - TailwindCSS
 
 ## Features
-- Search for the full definition of words
-- Get suggestions for the closest match on incorrect spelling
-- Listen to the pronunciation of words
-- Add words to your personal vocab dictionary
-- Sort words in your dictionary by date added or alphabetically
-- Move words that you have mastered to the Vocab Valley for future reference
-- Delete words from your dictionary
-- Responsive design
-- Dark mode
-- Firebase User authentication
+- Add words to personal dictionary and manage them
+- Spaced Repetition System (SRS) for effective learning
+- Learn words with daily review sessions
+- Track your learning progress with XP, levels, and streaks
+- Start custom quizzes to test your knowledge
+- Word suggestions for misspelled words
+- Responsive design with dark mode
+- Secured Firebase User authentication
 
 ## Setup Instructions
 1. Clone the repository:
@@ -57,7 +53,7 @@ This app allows you to search for the meaning of words, listen to the pronunciat
 ***
 
 ## Preview
-<img width="600" alt="image" src="https://res.cloudinary.com/ddr8aveca/image/upload/v1749011995/github%20storage/Screenshot_2025-06-04_102133_g1dlhc.png">
+<img width="600" alt="image" src="https://res.cloudinary.com/ddr8aveca/image/upload/v1766157037/github%20storage/Screenshot_2025-12-19_at_10.02.09_AM_cxdgjf.png">
 
 ***
 

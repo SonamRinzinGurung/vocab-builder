@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import { getLevel } from "../../utils/getLevel" // path from above
+import { getLevel } from "../../utils/getLevel";
 
 export default function LevelCard({ xpToday, lifetimeXp }) {
-    const { level, currentLevelXP, nextLevelXP, progress } = getLevel(lifetimeXp);
+    const { level, nextLevelXP, progress } = getLevel(lifetimeXp);
     const DAILY_XP_GOAL = 100;
     const dailyProgress = Math.min(xpToday / DAILY_XP_GOAL, 1);
 
@@ -20,7 +20,7 @@ export default function LevelCard({ xpToday, lifetimeXp }) {
             {/* LEVEL PROGRESS BAR */}
             <div>
                 <div className="flex justify-between text-xs mb-1">
-                    <span>{currentLevelXP} XP</span>
+                    <span></span>
                     <span>Next: {nextLevelXP} XP</span>
                 </div>
                 <div className="w-full h-3 bg-slate-300 dark:bg-slate-700 rounded-full overflow-hidden">
