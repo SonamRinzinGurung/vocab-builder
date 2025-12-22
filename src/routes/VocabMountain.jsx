@@ -7,6 +7,7 @@ import { db } from "../firebase-config";
 import useSetTitle from "../hooks/useSetTitle";
 import VocabSearchFilterComponent from "../components/VocabSearchFilterComponent";
 import PageLayout from "../components/PageLayout";
+import { getWordMastery } from "../utils/getWordMastery";
 
 const VocabMountain = ({ user }) => {
   useSetTitle("Vocab Mountain");
@@ -60,7 +61,7 @@ const VocabMountain = ({ user }) => {
                 key={index}
                 className="word rounded-lg border border-slate-300 dark:border-slate-700 md:max-w-xl"
               >
-                <DefinitionGroup vocab={vocab} source="vocab-mountain" />
+                <DefinitionGroup vocab={{ ...vocab, mastery: getWordMastery(vocab) }} source="vocab-mountain" />
               </section>
             );
           })}

@@ -1,6 +1,7 @@
 export function updateSRS(word, quality) {
     const ease = word.ease ?? 2.5;
     const interval = word.interval ?? 0;
+    const MAX_INTERVAL = 180; // maximum interval of 6 months
 
     // 1. Update ease factor
     let newEase = ease + (0.1 - (3 - quality) * 0.08);
@@ -9,10 +10,14 @@ export function updateSRS(word, quality) {
     // 2. Update interval based on quality
     let newInterval;
 
-    if (quality < 2) {
-        // Forgot or Hard → short interval
-        newInterval = 1;
-    } else {
+    if (quality === 0) {
+        newInterval = 1; // Forgot
+        newEase -= 0.2;
+    }
+    else if (quality === 1) {
+        newInterval = Math.max(1, Math.round(interval * 0.5)); // Hard
+    }
+    else {
         if (interval === 0) {
             newInterval = 1;
         } else if (interval === 1) {
@@ -21,6 +26,9 @@ export function updateSRS(word, quality) {
             newInterval = Math.round(interval * newEase);
         }
     }
+
+    // Cap interval to MAX_INTERVAL
+    newInterval = Math.min(newInterval, MAX_INTERVAL);
 
     // 3. Determine next review timestamp
     const now = new Date();

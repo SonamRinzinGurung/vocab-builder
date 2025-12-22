@@ -15,8 +15,10 @@ import MenuItem from "./MenuItem";
 import MobileMenuModal from "./MobileMenuModal";
 import { RiFileTransferLine } from "react-icons/ri";
 import { MdDeleteOutline } from "react-icons/md";
+import MasteryBadge from "./MasteryBadge";
 
 const DefinitionGroup = ({ vocab, source }) => {
+
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const modalRef = useRef(null);
@@ -79,7 +81,7 @@ const DefinitionGroup = ({ vocab, source }) => {
         ref={ref}
         className="flex justify-between items-center cursor-pointer p-2 rounded-lg bg-slate-200 dark:bg-slate-800 pl-4"
       >
-        <div className="font-subHead text-xl tracking-wide">{vocab?.word}</div>
+        <div className="flex flex-col gap-1 font-subHead text-xl tracking-wide">{vocab?.word} <MasteryBadge mastery={vocab.mastery} /></div>
         <div
           ref={modalRef}
           className="relative"
