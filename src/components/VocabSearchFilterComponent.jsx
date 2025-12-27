@@ -11,6 +11,7 @@ import useKeyPress from "../hooks/useKeyPress";
 import useWindowSize from "../hooks/useWindowSize";
 import Fuse from "fuse.js";
 import PropTypes from "prop-types";
+import { getWordMastery } from "../utils/getWordMastery";
 
 const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort, setDateSort, notFound, setNotFound, suggestedWords, setSuggestedWords }) => {
     const searchBoxRef = useRef(null);
@@ -101,6 +102,23 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
         }
     };
 
+    const handleSortByMastery = (e) => {
+        e.preventDefault();
+        setIsSorted(false); // reset alphabetic sort
+        setDateSort("desc"); // reset date sort
+
+        const sortedByMastery = [...result]?.sort((a, b) => {
+            a = { ...a, mastery: getWordMastery(a) ?? 0 };
+            b = { ...b, mastery: getWordMastery(b) ?? 0 };
+
+            const masteryA = a.mastery ?? 0;
+            const masteryB = b.mastery ?? 0;
+
+            return masteryB - masteryA; // descending order
+        });
+
+        setResult(sortedByMastery);
+    }
     const handleSearchSuggestedWord = (suggestedWord) => {
         let searchResult = [];
 
@@ -146,6 +164,7 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
                                             <div>{isSorted ? "UnSort" : "Sort"}</div>
                                         </div>
                                     } />
+
                                     <MenuItem handleClick={handleDateSort} content={
                                         <div className="flex items-center gap-2">
                                             <div>
@@ -156,6 +175,12 @@ const VocabSearchFilterComponent = ({ data, setResult, result, refetch, dateSort
                                                 )}
                                             </div>
                                             <div>Date</div>
+                                        </div>
+                                    } />
+                                    <MenuItem handleClick={handleSortByMastery} content={
+                                        <div className="flex items-center gap-2">
+                                            {/* <TiSortAlphabetically /> */}
+                                            <div>Sort Mastery</div>
                                         </div>
                                     } />
                                 </div>

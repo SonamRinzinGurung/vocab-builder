@@ -171,7 +171,6 @@ const DefinitionGroup = ({ vocab, source }) => {
           )}
               </div>
             )}
-        <>
           {vocab?.meanings.map((meaning, index) => {
             return (
               <div key={index} className="meaning">
@@ -180,7 +179,6 @@ const DefinitionGroup = ({ vocab, source }) => {
               </div>
             );
           })}
-        </>
         </div>
       )}
     </div>
