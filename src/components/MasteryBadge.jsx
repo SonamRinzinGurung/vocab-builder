@@ -11,7 +11,7 @@ function MasteryBadge({ mastery }) {
     const labels = ["New", "Learning", "Familiar", "Mastered"];
 
     return (
-        <span className={`w-fit px-2 py-0.5 rounded text-xs ${styles[mastery]}`}>
+        <span className={`w-fit px-2 py-0.5 rounded text-xs font-medium ${styles[mastery]}`}>
             {labels[mastery]}
         </span>
     );
