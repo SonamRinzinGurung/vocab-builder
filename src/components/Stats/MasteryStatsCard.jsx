@@ -52,9 +52,9 @@ export default function MasteryStatsCard({ user }) {
 
             {/* progress bar toward mastered */}
             <div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mb-1 text-right">{`${data.masteryStatsCount[3]} / ${data.wordCount} words mastered`}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mb-1 text-right">{`${data?.masteryStatsCount[3]} / ${data?.wordCount} words mastered`}</p>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${(Math.min(data.masteryStatsCount[3] / data.wordCount, 1) * 100)}%` }}></div>
+                    <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${(Math.min(data?.masteryStatsCount[3] / data?.wordCount, 1) * 100)}%` }}></div>
                 </div>
             </div>
         </div>
