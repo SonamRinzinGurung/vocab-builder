@@ -41,7 +41,7 @@ export default function MasteryStatsCard({ user }) {
 
             <div className="grid grid-cols-4 text-center gap-2">
                 {
-                    data.masteryStatsCount.map((mastery, index) => {
+                    data?.masteryStatsCount?.map((mastery, index) => {
                         return <div key={index}>
                             <MasteryBadge mastery={index} />
                             <p className="text-lg mt-1 font-bold">{mastery}</p>
