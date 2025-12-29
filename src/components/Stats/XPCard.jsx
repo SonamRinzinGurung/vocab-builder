@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { getLevel } from "../../utils/getLevel";
 
-export default function LevelCard({ xpToday, lifetimeXp }) {
+export default function XPCard({ xpToday, lifetimeXp }) {
     const { level, nextLevelXP, progress } = getLevel(lifetimeXp);
     const DAILY_XP_GOAL = 100;
     const dailyProgress = Math.min(xpToday / DAILY_XP_GOAL, 1);
@@ -51,7 +51,7 @@ export default function LevelCard({ xpToday, lifetimeXp }) {
     );
 }
 
-LevelCard.propTypes = {
+XPCard.propTypes = {
     xpToday: PropTypes.number.isRequired,
     lifetimeXp: PropTypes.number.isRequired,
 };

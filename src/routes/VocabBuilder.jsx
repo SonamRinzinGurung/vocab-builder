@@ -23,7 +23,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { IoIosBookmark } from "react-icons/io";
 import ToolTip from "../components/ToolTip";
 import SearchTextBox from "../components/SearchTextBox";
-import SummaryStatsBar from "../components/review/SummaryStatsBar";
+import SummaryStatsBar from "../components/stats/SummaryStatsBar";
 
 const VocabBuilder = ({ user }) => {
   useSetTitle("Vocab Builder");

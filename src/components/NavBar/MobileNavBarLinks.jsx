@@ -44,6 +44,16 @@ const MobileNavBarLinks = ({ toggleMenu }) => {
             >
                 <span className="font-subHead text-xl">Vocab Test</span>
             </NavLink>
+            <NavLink
+                onClick={toggleMenu}
+                to={"/stats"}
+                className={({ isActive }) =>
+                    `w-full pl-8 py-4 text-gray-100 hover:bg-[#f0f4f8]  hover:text-gray-700 border-b-2 ${isActive ? "text-gray-100 bg-primary" : ""
+                    }`
+                }
+            >
+                <span className="font-subHead text-xl">Vocab Stats</span>
+            </NavLink>
         </>
     )
 }

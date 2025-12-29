@@ -3,8 +3,8 @@ import ReviewSession from "../components/review/ReviewSession.jsx";
 import useDueWords from "../hooks/useDueWords.jsx";
 import useUserStats from "../hooks/useUserStats.jsx";
 import PageLayout from "../components/PageLayout.jsx";
-import StreaksCard from "../components/review/StreaksCard.jsx";
-import XPCard from "../components/review/XPCard.jsx";
+import StreaksCard from "../components/Stats/StreaksCard.jsx";
+import XPCard from "../components/Stats/XPCard.jsx";
 
 const Dashboard = ({ user }) => {
     const { dueWords, unReviewed, refetchDueWords } = useDueWords(user.uid);

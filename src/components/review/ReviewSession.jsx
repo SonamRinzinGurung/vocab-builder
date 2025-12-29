@@ -2,7 +2,7 @@ import { useState } from "react";
 import Flashcard from "./Flashcard.jsx";
 import RatingButtons from "./RatingButtons.jsx";
 import PropTypes from "prop-types";
-import { updateSRS } from "../../utils/updateSRS";
+import { updateSRS } from "../../utils/updateSRS.jsx";
 import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.jsx";
 import { LuPartyPopper } from "react-icons/lu";

@@ -39,6 +39,15 @@ const NavBarLinks = () => {
             >
                 Test
             </NavLink>
+            <NavLink
+                to="/stats"
+                className={({ isActive }) =>
+                    `p-4 hover:bg-primary hover:text-gray-100 hidden lg:block ${isActive ? "text-gray-100 bg-primary" : ""
+                    }`
+                }
+            >
+                Stats
+            </NavLink>
         </>
     )
 }
