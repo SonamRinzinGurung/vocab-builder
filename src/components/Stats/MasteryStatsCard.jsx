@@ -8,7 +8,9 @@ import MasteryBadge from "../MasteryBadge";
 export default function MasteryStatsCard({ user }) {
     const {
         data,
-        isLoading
+        isLoading,
+        isFetching,
+        isPending
     } = useQuery({
         queryKey: ["vocab-mountain"],
         queryFn: async () => {
@@ -26,7 +28,7 @@ export default function MasteryStatsCard({ user }) {
             const masteryStatsCount = [0, 0, 0, 0]
             fetchData.forEach((word) => {
                 const masteryLevel = getWordMastery(word)
-                masteryStatsCount[masteryLevel] = masteryStatsCount[masteryLevel] + 1
+                masteryStatsCount[masteryLevel]++
             })
 
             return { masteryStatsCount, wordCount: fetchData.length }
@@ -34,7 +36,7 @@ export default function MasteryStatsCard({ user }) {
         refetchOnWindowFocus: false,
     });
 
-    if (isLoading) return null
+    if (isLoading || isFetching || isPending) return null
     return (
         <div className="flex flex-col p-8 gap-4 md:max-w-xl rounded border bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 shadow-lg text-center mt-8">
             <h3 className="text-lg font-semibold">Word Mastery</h3>
@@ -52,9 +54,9 @@ export default function MasteryStatsCard({ user }) {
 
             {/* progress bar toward mastered */}
             <div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mb-1 text-right">{`${data?.masteryStatsCount[3]} / ${data?.wordCount} words mastered`}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mb-1 text-right">{`${data?.masteryStatsCount?.[3] ?? 0} / ${data?.wordCount ?? 0} words mastered`}</p>
                 <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${(Math.min(data?.masteryStatsCount[3] / data?.wordCount, 1) * 100)}%` }}></div>
+                    <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${(Math.min(data?.masteryStatsCount?.[3] / data?.wordCount, 1) * 100)}%` }}></div>
                 </div>
             </div>
         </div>
