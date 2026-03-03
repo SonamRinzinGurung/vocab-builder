@@ -5,11 +5,6 @@
  *   • compound where clauses actually filter correctly
  *   • Timestamp comparisons use real Firestore semantics
  *   • updateDoc / getDoc round-trips preserve the right fields
- *
- * Start the emulator before running:
- *   npm run emulators
- * Then in a second terminal:
- *   npm run test:integration
  */
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import {
@@ -191,14 +186,14 @@ describe('userStats document', () => {
     it('creates a stats document with setDoc when none exists yet', async () => {
         const statsRef = doc(db(), 'userStats', 'user1');
         await setDoc(statsRef, {
-            date: '2025-06-15',
+            date: '2026-03-02',
             reviewsToday: 1,
             xpToday: 10,
             totalReviews: 1,
             lifetimeXp: 10,
             streak: 1,
             longestStreak: 1,
-            lastActive: '2025-06-15',
+            lastActive: '2026-03-02',
         });
 
         const snap = await getDoc(statsRef);
@@ -211,7 +206,7 @@ describe('userStats document', () => {
         const statsRef = doc(db(), 'userStats', 'user1');
 
         await setDoc(statsRef, {
-            date: '2025-06-15',
+            date: '2026-03-02',
             reviewsToday: 2,
             xpToday: 20,
             totalReviews: 10,

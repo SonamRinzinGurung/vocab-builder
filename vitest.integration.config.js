@@ -14,5 +14,9 @@ export default defineConfig({
         // Emulator calls are slower than in-memory mocks — give each test more headroom.
         testTimeout: 15000,
         hookTimeout: 15000,
+        // Each test file uploads different rules to the same emulator project.
+        // Running files in parallel causes them to overwrite each other's rules mid-test.
+        // Sequential execution ensures file 1 finishes before file 2 loads its rules.
+        fileParallelism: false,
     },
 });

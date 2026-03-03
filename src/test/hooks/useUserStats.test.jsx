@@ -102,7 +102,7 @@ describe('useUserStats', () => {
 
     it('resets reviewsToday and xpToday to 0 when the stored date is in the past', async () => {
         const staleStats = {
-            date: '2025-06-14', // yesterday
+            date: '2026-03-01', // yesterday
             streak: 7,
             reviewsToday: 12,
             xpToday: 120,

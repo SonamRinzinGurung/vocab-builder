@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // vocab/{docId}
+    // Each document stores the owner's uid in the `uid` field.
+    match /vocab/{docId} {
+      // Read, update, delete: the requesting user must own the existing document.
+      // resource.data is the current document — request.resource is only available on writes.
+      allow read, update, delete: if request.auth != null
+                                  && request.auth.uid == resource.data.uid;
+
+      // Create: the requesting user must be setting their own uid on the new document.
+      allow create: if request.auth != null
+                    && request.auth.uid == request.resource.data.uid;
+    }
+
+    // userStats/{userId}
+    // Document ID IS the owning user's uid — no field lookup needed.
+    match /userStats/{userId} {
+      allow read, write: if request.auth != null
+                         && request.auth.uid == userId;
+    }
+  }
+}
