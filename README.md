@@ -21,6 +21,8 @@ Vocab Builder is a web application designed to help users enhance their vocabula
 - Word suggestions for misspelled words
 - Responsive design with dark mode
 - Secured Firebase User authentication
+- Unit testing with Vitest and React Testing Library
+- Integration testing with Firebase Emulator Suite and mock firebase functions
 
 ## Setup Instructions
 1. Clone the repository:
@@ -51,6 +53,16 @@ Vocab Builder is a web application designed to help users enhance their vocabula
    ```
 6. Open your browser and go to `http://localhost:5173` to view the app.
 ***
+
+## Testing Instructions
+1. To run unit tests, use the following command:
+   ```bash
+   npm run test:run
+   ```
+2. To run integration tests, use the following command:
+   ```bash
+   npm run test:ci
+   ```
 
 ## Preview
 <img width="600" alt="image" src="https://res.cloudinary.com/ddr8aveca/image/upload/v1766157037/github%20storage/Screenshot_2025-12-19_at_10.02.09_AM_cxdgjf.png">
