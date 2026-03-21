@@ -39,6 +39,11 @@ const Login = () => {
     }
   };
 
+  const handleFillDemoCredentials = async () => {
+    setEmail("kanyenorth2000@gmail.com")
+    setPassword("secret")
+  }
+
   if (isLoading) return null;
   if (user) {
     return <Navigate to={"/"} />;
@@ -92,6 +97,9 @@ const Login = () => {
                   name="password"
                   id="password"
                 />
+              </div>
+              <div className="items-start w-fit rounded-sm px-2 bg-primary hover:shadow-lg h-8">
+                <button type="button" className="text-sm text-gray-100 w-full" onClick={handleFillDemoCredentials}>Fill Demo Credentials</button>
               </div>
               <div className="flex justify-center rounded-sm shadow-md bg-primary hover:shadow-lg h-8">
                 <button

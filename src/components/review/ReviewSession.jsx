@@ -150,6 +150,11 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
                                     <p className="md:text-2xl text-xl font-bold flex items-center gap-2 justify-center"> <MdPendingActions className="text-blue-500" />
                                         {dueWords.length} word{dueWords.length !== 1 ? "s" : ""} due today</p>
                                     <p className="md:text-sm text-xs text-slate-500 dark:text-slate-300">Start your review</p>
+
+                                    <button className="font-mono px-6 py-2 bg-primary text-gray-100 rounded-sm w-full mt-6"
+                                        onClick={() => setReviewStarted(true)}>
+                                        Start
+                                    </button>
                                 </>
                             ) : (
                                 <>
@@ -157,8 +162,6 @@ export default function ReviewSession({ dueWords, userStats, unReviewed, refetch
                                     <p className="md:text-sm text-xs text-slate-500">Study new words instead</p>
                                 </>
                             )}
-
-                            <button className="font-mono px-6 py-2 bg-primary text-gray-100 rounded-sm w-full mt-6" onClick={() => setReviewStarted(true)}>Start</button>
                         </div>
                     </>
                 ) : (
